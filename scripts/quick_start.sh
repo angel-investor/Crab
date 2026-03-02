@@ -44,7 +44,7 @@ python scripts/quick_start.py \
     --fp16 False \
     --ckpt_dir /root/autodl-tmp/Crab/ckpt/ \
     --avs_ckpt_dir $avs_ckpt_dir \
-    --avqa_task True \
+    --avqa_task False \
     --ave_task False \
     --avvp_task False \
     --arig_task False \
