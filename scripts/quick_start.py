@@ -556,7 +556,7 @@ def inference(attn_implementation=None):
 
     device = infer_args.device
     torch.cuda.set_device(device)
-    model.npu()
+    model.to(device)
     model.eval()
     image_processor = model.get_model().visual_encoder.image_processor if training_args.visual_branch else None
     dataset, collator = get_dataset_collator(data_args=data_args, tokenizer=tokenizer, 
