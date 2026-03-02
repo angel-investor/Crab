@@ -230,6 +230,7 @@ def inference_ref_avs(dataloader,ckpt_dir,model,tokenizer,test_name='test_s'):
             else:
                 output_ids = result['output_ids']
                 output = tokenizer.batch_decode(output_ids,skip_special_tokens=False)
+                print(f'[debug] model output: {output}')  # 诊断：查看模型实际输出
                 pred_masks = result.get('pred_masks',None)
                 if pred_masks is None:
                     print(f'step: {step} pred_masks is None')
@@ -272,6 +273,9 @@ def inference_ref_avs(dataloader,ckpt_dir,model,tokenizer,test_name='test_s'):
                 pbar.write(f'iou: {iou} fscore: {fscore}')
         pbar.update(1)
     pbar.close()
+    if count == 0:
+        print('[ref-avs] No valid mask predictions (count=0). Model did not generate <mask> tokens.')
+        return
     miou = miou / count
     f1 = f1 / count
     print(f'miou: {miou} f-score: {f1} tot: {count}')
