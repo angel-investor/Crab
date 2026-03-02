@@ -58,13 +58,13 @@ python scripts/quick_start.py \
     --multi_frames False \
     --visual_branch True \
     --video_frame_nums 10 \
-    --vit_ckpt_path /group/40061/cserdu/pretrain/openai-clip-vit-large-patch14-224 \
+    --vit_ckpt_path /root/autodl-tmp/Crab/pretrain/clip \
     --select_feature patch \
     --image_size 224 \
     --patch_size 14 \
     --visual_query_token_nums 32 \
     --audio_branch True \
-    --BEATs_ckpt_path /group/40061/cserdu/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt \
+    --BEATs_ckpt_path /root/autodl-tmp/Crab/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt \
     --audio_query_token_nums 32 \
     --seg_branch True \
     --prompt_embed_dim 256 \
