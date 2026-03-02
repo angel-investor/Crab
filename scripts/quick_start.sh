@@ -42,7 +42,7 @@ python scripts/quick_start.py \
     --bf16 False \
     --tf32 False \
     --fp16 False \
-    --ckpt_dir /root/autodl-tmp/ckpt/ \
+    --ckpt_dir /root/autodl-tmp/Crab/ckpt/ \
     --avs_ckpt_dir $avs_ckpt_dir \
     --avqa_task True \
     --ave_task False \
