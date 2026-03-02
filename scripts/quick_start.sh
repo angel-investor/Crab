@@ -6,9 +6,9 @@ NPROC_PER_NODE=8
 MASTER_PORT=6666
 RANK=0
 
-llama2_ckpt_path=/group/40061/cserdu/pretrain/Llama-2-7b-chat-hf
-qwen2_ckpt_path=/group/40061/cserdu/pretrain/Qwen2-7B-Instruct
-dockerdata_llama2_ckpt_path=/dockerdata/Llama-2-7b-chat-hf
+llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
+qwen2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
+dockerdata_llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
 
 # Training Arguments
 LOCAL_BATCH_SIZE=8
@@ -25,8 +25,8 @@ export TOKENIZERS_PARALLELISM='true'
 export ASCEND_LAUNCH_BLOCKING='1'
 # export NCCL_P2P_DISABLE=NVL
 # export CUDA_DEVICE_ORDER="PCI_BUS_ID"
-avs_ckpt_dir=results/finetune/058-finetune-ms3-s4-ref_avs/checkpoint-15417
-avss_ckpt_dir=results/finetune/059-finetune-avss/checkpoint-5022
+avs_ckpt_dir=/root/autodl-tmp/Crab/avs_ckpt
+avss_ckpt_dir=/root/autodl-tmp/Crab/avs_ckpt
 
 python scripts/quick_start.py \
     --llm_name llama \
@@ -42,9 +42,9 @@ python scripts/quick_start.py \
     --bf16 False \
     --tf32 False \
     --fp16 False \
-    --ckpt_dir results/finetune/057-joint_all/checkpoint-819 \
+    --ckpt_dir /root/autodl-tmp/ckpt/ \
     --avs_ckpt_dir $avs_ckpt_dir \
-    --avqa_task False \
+    --avqa_task True \
     --ave_task False \
     --avvp_task False \
     --arig_task False \

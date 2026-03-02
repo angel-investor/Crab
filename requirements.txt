@@ -23,8 +23,9 @@ contourpy==1.2.1
 cycler==0.12.1
 datasets==2.20.0
 decorator==4.4.2
-decord==0.6.0
-deepspeed==0.12.6
+# decord==0.6.0  # 需要先安装 FFmpeg: brew install ffmpeg
+# 然后手动安装: pip install --no-binary decord decord 或 pip install git+https://github.com/dmlc/decord.git
+# deepspeed==0.12.6  # DeepSpeed 主要用于 NVIDIA GPU 训练，macOS 上可能不需要
 defusedxml==0.7.1
 deprecation==2.1.0
 dill==0.3.8
@@ -43,8 +44,8 @@ google-auth==2.36.0
 google-auth-httplib2==0.2.0
 google-generativeai==0.8.3
 googleapis-common-protos==1.66.0
-grpcio==1.68.1
-grpcio-status==1.68.1
+grpcio
+grpcio-status
 h11==0.14.0
 hjson==3.1.0
 httpcore==1.0.7
@@ -97,18 +98,19 @@ ninja==1.11.1.1
 notebook==6.3.0
 numba==0.60.0
 numpy==1.26.4
-nvidia-cublas-cu11==11.10.3.66
-nvidia-cuda-cupti-cu11==11.7.101
-nvidia-cuda-nvrtc-cu11==11.7.99
-nvidia-cuda-runtime-cu11==11.7.99
-nvidia-cudnn-cu11==8.5.0.96
-nvidia-cufft-cu11==10.9.0.58
-nvidia-curand-cu11==10.2.10.91
-nvidia-cusolver-cu11==11.4.0.1
-nvidia-cusparse-cu11==11.7.4.91
-nvidia-ml-py==12.555.43
-nvidia-nccl-cu11==2.14.3
-nvidia-nvtx-cu11==11.7.91
+# 以下 NVIDIA CUDA 包仅适用于 NVIDIA GPU，macOS M2 不需要
+# nvidia-cublas-cu11==11.10.3.66
+# nvidia-cuda-cupti-cu11==11.7.101
+# nvidia-cuda-nvrtc-cu11==11.7.99
+# nvidia-cuda-runtime-cu11==11.7.99
+# nvidia-cudnn-cu11==8.5.0.96
+# nvidia-cufft-cu11==10.9.0.58
+# nvidia-curand-cu11==10.2.10.91
+# nvidia-cusolver-cu11==11.4.0.1
+# nvidia-cusparse-cu11==11.7.4.91
+# nvidia-ml-py==12.555.43
+# nvidia-nccl-cu11==2.14.3
+# nvidia-nvtx-cu11==11.7.91
 opencv-python==4.10.0.84
 openpyxl==3.1.5
 packaging==20.9
@@ -127,7 +129,7 @@ proglog==0.1.10
 prometheus-client==0.10.1
 prompt-toolkit==3.0.18
 proto-plus==1.25.0
-protobuf==5.29.0
+protobuf
 psutil==6.0.0
 ptyprocess==0.7.0
 py-cpuinfo==9.0.0
@@ -162,8 +164,8 @@ sniffio==1.2.0
 soundfile==0.12.1
 soxr==0.4.0
 sympy==1.13.3
-tensorboard==2.17.0
-tensorboard-data-server==0.7.2
+tensorboard
+tensorboard-data-server
 terminado==0.9.4
 testpath==0.4.4
 thop==0.1.1.post2209072238
@@ -180,7 +182,7 @@ tqdm==4.66.4
 traitlets==5.0.5
 transformers==4.37.2
 transformers-stream-generator==0.0.5
-triton==2.0.0
+# triton==2.0.0  # Triton 是 NVIDIA GPU 编译器，macOS 不支持
 typing-extensions==4.12.2
 tzdata==2024.1
 uritemplate==4.1.1

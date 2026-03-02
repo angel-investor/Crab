@@ -1,0 +1,11 @@
+
+# 模型权重和数据（不参与git同步）
+pretrain/
+ckpt/
+avs_ckpt/
+.ipynb_checkpoints
+.idea
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
