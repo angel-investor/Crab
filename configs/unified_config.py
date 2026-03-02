@@ -10,14 +10,15 @@ class ModelArguments:
     freeze_backbone: bool = field(default=True, metadata={"help": "Whether to freeze the LLM backbone."})
     llm_name: str = field(default='qwen')
     ## visual module
-    vit_ckpt_path: str = field(default='/group/40061/cserdu/pretrain/openai-clip-vit-large-patch14-224')
+    vit_ckpt_path: str = field(default='')
     select_layer_list = [14,22,23]  # [-11,-2,-1]
     select_feature: str = field(default='patch')
     image_size: int = field(default=224)
     patch_size: int = field(default=14)
     visual_query_token_nums: int = field(default=32)
     ## audio module
-    BEATs_ckpt_path: str = field(default='/group/40061/cserdu/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt')
+    BEATs_ckpt_path: str = field(default='')
+    bert_ckpt_path: str = field(default='')
     audio_query_token_nums: int = field(default=32)
     ## seg module
     prompt_embed_dim: int = field(default=256)

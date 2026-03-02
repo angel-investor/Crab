@@ -32,14 +32,15 @@ class UnifiedMetaModel:
         self,
         d_model = 4096,
         # visual
-        vit_ckpt_path = '/group/40061/cserdu/pretrain/openai-clip-vit-large-patch14-224',
+        vit_ckpt_path = None,
         select_layer_list = [14,22,23],
         select_feature = 'patch',
         image_size = 224,
         patch_size = 14,
         visual_query_token_nums = 32,
         # audio
-        BEATs_ckpt_path = '/group/40061/cserdu/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt',
+        BEATs_ckpt_path = None,
+        bert_ckpt_path = None,
         audio_query_token_nums = 32,
         # seg
         image_scale_nums = 2,
@@ -75,13 +76,13 @@ class UnifiedMetaModel:
                 image_token_nums = (image_size//patch_size) * (image_size//patch_size)
                 self.visual_encoder = VisualEncoder(model_name_or_path=vit_ckpt_path,select_layer_list=select_layer_list,
                                                     select_feature=select_feature)
-                self.vl_projector = VLProjector(hidden_size=1024, d_model=d_model, depth=2, image_token_nums=image_token_nums,
+                self.vl_projector = VLProjector(bert_ckpt_path=bert_ckpt_path, hidden_size=1024, d_model=d_model, depth=2, image_token_nums=image_token_nums,
                                                 num_query_token=visual_query_token_nums, num_hidden_layers=2,)
             print('init visual_encoder, vl_projector finished...')
 
         if audio_branch:
             self.audio_encoder =  AudioEncoder(ckpt_path=BEATs_ckpt_path)
-            self.al_projector = ALProjector(hidden_size=768, d_model=d_model, depth=2, num_query_token=audio_query_token_nums,
+            self.al_projector = ALProjector(bert_ckpt_path=bert_ckpt_path, hidden_size=768, d_model=d_model, depth=2, num_query_token=audio_query_token_nums,
                                             num_hidden_layers=2)
             print('init audio_encoder, al_projector finished...')
 

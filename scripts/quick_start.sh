@@ -65,6 +65,7 @@ python scripts/quick_start.py \
     --visual_query_token_nums 32 \
     --audio_branch True \
     --BEATs_ckpt_path /root/autodl-tmp/Crab/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt \
+    --bert_ckpt_path /root/autodl-tmp/Crab/pretrain/bert \
     --audio_query_token_nums 32 \
     --seg_branch True \
     --prompt_embed_dim 256 \

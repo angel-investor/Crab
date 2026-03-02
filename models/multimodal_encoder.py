@@ -34,7 +34,7 @@ class VisualEncoder(nn.Module):
 
     def __init__(
         self,
-        model_name_or_path = '/group/40061/cserdu/pretrain/openai-clip-vit-large-patch14-224',
+        model_name_or_path = None,
         select_layer_list = [-11,-2,-1],
         select_feature = 'patch',
     ) -> None:
@@ -87,7 +87,7 @@ class VisualEncoder(nn.Module):
 class VLProjector(nn.Module):
     def __init__(
         self,
-        bert_ckpt_path = '/group/40061/cserdu/pretrain/google-bert-base-uncased', 
+        bert_ckpt_path = None,
         hidden_size = 1024,
         image_token_nums = 256,
         num_query_token = 32, 
@@ -148,8 +148,8 @@ class VLProjector(nn.Module):
 class AudioEncoder(nn.Module):
 
     def __init__(
-        self, 
-        ckpt_path = '/group/40061/cserdu/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt'
+        self,
+        ckpt_path = None
     ) -> None:
         super().__init__()
 
@@ -188,8 +188,8 @@ class AudioEncoder(nn.Module):
 
 class ALProjector(nn.Module):
     def __init__(
-        self, 
-        bert_ckpt_path = '/group/40061/cserdu/pretrain/google-bert-base-uncased', 
+        self,
+        bert_ckpt_path = None,
         hidden_size = 768, 
         num_query_token = 32, 
         num_hidden_layers = 2, 
