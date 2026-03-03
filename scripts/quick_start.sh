@@ -25,8 +25,8 @@ export TOKENIZERS_PARALLELISM='true'
 export ASCEND_LAUNCH_BLOCKING='1'
 # export NCCL_P2P_DISABLE=NVL
 # export CUDA_DEVICE_ORDER="PCI_BUS_ID"
-avs_ckpt_dir=/root/autodl-tmp/Crab/ckpt
-avss_ckpt_dir=/root/autodl-tmp/Crab/ckpt
+avs_ckpt_dir=/root/autodl-tmp/Crab/avs_ckpt
+avss_ckpt_dir=/root/autodl-tmp/Crab/avs_ckpt
 
 python scripts/quick_start.py \
     --llm_name llama \

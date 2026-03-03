@@ -552,8 +552,17 @@ def inference(attn_implementation=None):
         ckpt = torch.load(ckpt_path,map_location='cpu')
         model.load_state_dict(ckpt,strict=False)
         print(f'load hyper_lora weights from {ckpt_path} finished...')
-        ## seg module ckpt
-        ckpt_path = join(avs_ckpt_dir,'finetune_weights.bin')
+        ## seg module ckpt：根据任务类型选择正确的权重文件名
+        if data_args.avss_task:
+            # AVSS 任务使用专用权重
+            avs_ckpt_filename = 'avss_finetune_weights.bin'
+        else:
+            # AVS (s4/ms3/ref-avs) 任务使用 avs 权重
+            avs_ckpt_filename = 'avs_finetune_weights.bin'
+        # 兼容旧文件名 finetune_weights.bin
+        ckpt_path = join(avs_ckpt_dir, avs_ckpt_filename)
+        if not os.path.exists(ckpt_path):
+            ckpt_path = join(avs_ckpt_dir, 'finetune_weights.bin')
         ckpt = torch.load(ckpt_path,map_location='cpu')
         model.load_state_dict(ckpt,strict=False)
         print(f'load seg_module ckpt from {ckpt_path} finished...')
