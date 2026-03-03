@@ -3,6 +3,7 @@
 pretrain/
 ckpt/
 avs_ckpt/
+prtrain_ckpt_dir/
 .ipynb_checkpoints
 .idea
 # Python 缓存
@@ -10,3 +11,6 @@ __pycache__/
 *.pyc
 *.pyo
 .DS_Store
+data/AudioCaps/
+data/LVIS/
+data/video-llava
