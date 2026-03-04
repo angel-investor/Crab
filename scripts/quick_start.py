@@ -454,6 +454,31 @@ def inference_avss(dataloader,ckpt_dir,model,tokenizer):
     print(f'miou: {miou} miou_noBg: {miou_noBg} f_score: {f_score} f_score_noBg: {f_score_noBg}')
 
 
+def resize_ckpt_embeddings(ckpt, model):
+    """兼容 checkpoint 词表大小与当前模型不一致的情况。
+
+    当 checkpoint 中 embed_tokens / lm_head 的行数与当前模型不同时，
+    将 checkpoint 的权重复制到当前模型大小的矩阵中（多出的行保留随机初始化），
+    从而避免 load_state_dict 因 size mismatch 抛出 RuntimeError。
+    """
+    current_sd = model.state_dict()
+    for key in list(ckpt.keys()):
+        if key not in current_sd:
+            continue
+        ckpt_shape = ckpt[key].shape
+        model_shape = current_sd[key].shape
+        if ckpt_shape == model_shape:
+            continue
+        # 仅处理二维权重（embedding / lm_head）的第一维不匹配
+        if len(ckpt_shape) == 2 and len(model_shape) == 2 and ckpt_shape[1] == model_shape[1]:
+            print(f'[resize_ckpt] {key}: ckpt {ckpt_shape} → model {model_shape}, 自动 resize')
+            new_weight = current_sd[key].clone().to(ckpt[key].dtype)
+            copy_rows = min(ckpt_shape[0], model_shape[0])
+            new_weight[:copy_rows] = ckpt[key][:copy_rows]
+            ckpt[key] = new_weight
+    return ckpt
+
+
 def inference(attn_implementation=None):
     set_seed(42)
     parser = transformers.HfArgumentParser((ModelArguments, DataArguments, TrainingArguments, InferenceArguments))
@@ -544,12 +569,14 @@ def inference(attn_implementation=None):
     if not infer_avs:
         ckpt_path = join(ckpt_dir,'finetune_weights.bin')
         ckpt = torch.load(ckpt_path,map_location='cpu')
+        ckpt = resize_ckpt_embeddings(ckpt, model)
         model.load_state_dict(ckpt,strict=False)
         print(f'load ckpt from {ckpt_path} finished...')
     else:
         ## hyper lora ckpt
         ckpt_path = join(ckpt_dir,'finetune_weights.bin')
         ckpt = torch.load(ckpt_path,map_location='cpu')
+        ckpt = resize_ckpt_embeddings(ckpt, model)
         model.load_state_dict(ckpt,strict=False)
         print(f'load hyper_lora weights from {ckpt_path} finished...')
         ## seg module ckpt：根据任务类型选择正确的权重文件名
@@ -564,6 +591,7 @@ def inference(attn_implementation=None):
         if not os.path.exists(ckpt_path):
             ckpt_path = join(avs_ckpt_dir, 'finetune_weights.bin')
         ckpt = torch.load(ckpt_path,map_location='cpu')
+        ckpt = resize_ckpt_embeddings(ckpt, model)
         model.load_state_dict(ckpt,strict=False)
         print(f'load seg_module ckpt from {ckpt_path} finished...')
 
