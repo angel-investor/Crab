@@ -6,7 +6,7 @@ NPROC_PER_NODE=8
 MASTER_PORT=6666
 RANK=0
 
-llama2_ckpt_path="your llama2 ckpt dir"
+llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
 
 # Training Arguments
 LOCAL_BATCH_SIZE=4
@@ -37,7 +37,7 @@ torchrun --nproc_per_node $NPROC_PER_NODE \
     --bf16 False \
     --tf32 False \
     --fp16 False \
-    --pretrain_ckpt_dir "your pretrain ckpt dir" \
+    --pretrain_ckpt_dir /root/autodl-tmp/Crab/pretrain_ckpt \
     --avqa_task True \
     --ave_task True \
     --avvp_task True \
@@ -51,13 +51,13 @@ torchrun --nproc_per_node $NPROC_PER_NODE \
     --multi_frames False \
     --visual_branch True \
     --video_frame_nums 10 \
-    --vit_ckpt_path "your vit ckpt path" \
+    --vit_ckpt_path /root/autodl-tmp/Crab/pretrain/clip \
     --select_feature patch \
     --image_size 224 \
     --patch_size 14 \
     --visual_query_token_nums 32 \
     --audio_branch True \
-    --BEATs_ckpt_path "your BEATs ckpt path " \
+    --BEATs_ckpt_path /root/autodl-tmp/Crab/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt \
     --audio_query_token_nums 32 \
     --seg_branch False \
     --prompt_embed_dim 256 \

@@ -24,7 +24,7 @@ export NCCL_P2P_DISABLE=NVL
 
 python scripts/pretrain/inference_audio.py \
     --llm_name qwen \
-    --model_name_or_path /group/40061/cserdu/pretrain/Qwen2-7B-Instruct \
+    --model_name_or_path /root/autodl-tmp/Crab/pretrain/qwen2 \
     --freeze_backbone True \
     --lora_enable False \
     --bf16 False \

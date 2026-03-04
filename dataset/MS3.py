@@ -28,8 +28,8 @@ class MS3Dataset(Dataset):
         # image_processor,
         num_frames=8,
         image_aspect_ratio='pad',
-        data_root='/data/users/henghui_du/data/AVSBench-semantic',
-        meta_csv_path='/data/users/henghui_du/Unified/data/metadata.csv',
+        data_root='/root/autodl-tmp/Crab/data/AVSBench-semantic',
+        meta_csv_path='/root/autodl-tmp/Crab/data/metadata.csv',
     ):
         super(MS3Dataset, self).__init__()
         self.split = split
@@ -119,8 +119,8 @@ class MS3Dataset_2(Dataset):
         # image_processor,
         num_frames=8,
         image_aspect_ratio='pad',
-        data_root='/data/users/henghui_du/data/AVSBench-semantic',
-        meta_csv_path='/data/users/henghui_du/Unified/data/metadata.csv',
+        data_root='/root/autodl-tmp/Crab/data/AVSBench-semantic',
+        meta_csv_path='/root/autodl-tmp/Crab/data/metadata.csv',
     ):
         super(MS3Dataset_2, self).__init__()
         self.split = split

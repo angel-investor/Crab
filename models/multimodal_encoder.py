@@ -564,8 +564,8 @@ class MaskEncoder(nn.Module):
             lossconfig=None,
             n_embed=16384,
             embed_dim=256,
-            # ckpt_path='/group/40061/cserdu/pretrain/vqgan/vqgan_imagenet_f16_16384/last.ckpt'
-            ckpt_path = '/group/40061/cserdu/pretrain/vqgan/vqgan_imagenet_f16_16384/weight.ckpt'
+            # ckpt_path='/root/autodl-tmp/Crab/pretrain/vqgan/vqgan_imagenet_f16_16384/last.ckpt'
+            ckpt_path = '/root/autodl-tmp/Crab/pretrain/vqgan/vqgan_imagenet_f16_16384/weight.ckpt'
         )
         self.vqgan.requires_grad_(False)
         self.vqgan.eval()

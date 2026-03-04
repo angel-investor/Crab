@@ -131,9 +131,9 @@ def load_audio_lm(audio_lm_path):
 
 
 
-dir_base='/data/users/henghui_du/data/AVSBench-semantic'
-meta_csv_path='/data/users/henghui_du/Unified/data/metadata.csv'
-label_idx_path='/data/users/henghui_du/data/AVSBench-semantic/label2idx.json'
+dir_base='/root/autodl-tmp/Crab/data/AVSBench-semantic'
+meta_csv_path='/root/autodl-tmp/Crab/data/metadata.csv'
+label_idx_path='/root/autodl-tmp/Crab/data/AVSBench-semantic/label2idx.json'
 mask_num=10
 num_classes=71
 size=(256,256)
@@ -177,7 +177,7 @@ class AVS_V2_Dataset(Dataset):
             level_2_features.append(torch.tensor(np.load(level_2_path)))
             level_3_features.append(torch.tensor(np.load(level_3_path)))
 
-            path=os.path.join('/data/users/henghui_du/data/AVSBench-semantic/v2_vit_b32_feature',video_name+'.npy')
+            path=os.path.join('/root/autodl-tmp/Crab/data/AVSBench-semantic/v2_vit_b32_feature',video_name+'.npy')
             data=np.load(path)
             visual_feat=data[sel_idx:sel_idx+1]
             
@@ -187,7 +187,7 @@ class AVS_V2_Dataset(Dataset):
             #     level_0_features.append(torch.tensor(np.load(level_0_path)))
             #     level_3_features.append(torch.tensor(np.load(level_3_path)))
 
-            # path=os.path.join('/data/users/henghui_du/data/AVSBench-semantic/v2_vit_b32_feature',video_name+'.npy')
+            # path=os.path.join('/root/autodl-tmp/Crab/data/AVSBench-semantic/v2_vit_b32_feature',video_name+'.npy')
             # visual_feat=np.load(path)
         else:
             for i in range(10):
@@ -201,7 +201,7 @@ class AVS_V2_Dataset(Dataset):
                 level_2_features.append(torch.tensor(np.load(level_2_path)))
                 level_3_features.append(torch.tensor(np.load(level_3_path)))
 
-            path=os.path.join('/data/users/henghui_du/data/AVSBench-semantic/v2_vit_b32_feature',video_name+'.npy')
+            path=os.path.join('/root/autodl-tmp/Crab/data/AVSBench-semantic/v2_vit_b32_feature',video_name+'.npy')
             visual_feat=np.load(path)
 
         level_0_features=torch.stack(level_0_features,dim=0)

@@ -30,7 +30,7 @@ local_rank = None
 
 
 def inference_avs(dataloader,ckpt_dir,task_name,model,tokenizer):
-    v2_pallete = get_v2_pallete(label_to_idx_path='/group/40061/cserdu/data/AVS/label2idx.json',num_cls=71)
+    v2_pallete = get_v2_pallete(label_to_idx_path='/root/autodl-tmp/Crab/data/AVS/label2idx.json',num_cls=71)
     save_dir = join(ckpt_dir,f'inference_{task_name}')
     os.makedirs(save_dir,exist_ok=True)
     pbar = tqdm(total=len(dataloader),desc=f'inference {task_name}')
@@ -1136,7 +1136,7 @@ def inference_ref_avs_ntp(dataloader,ckpt_dir,model,tokenizer):
 
 
 def inference_avss(dataloader,ckpt_dir,model,tokenizer):
-    v2_pallete = get_v2_pallete(label_to_idx_path='/group/40061/cserdu/data/AVS/label2idx.json',num_cls=71)
+    v2_pallete = get_v2_pallete(label_to_idx_path='/root/autodl-tmp/Crab/data/AVS/label2idx.json',num_cls=71)
     save_dir = join(ckpt_dir,f'inference_avss')
     os.makedirs(save_dir,exist_ok=True)
     pbar = tqdm(total=len(dataloader),desc=f'inference avss')

@@ -141,7 +141,7 @@ def train(attn_implementation=None):
                                   add_audio_tokens=True, add_mask_tokens=False)
     
     
-    ckpt_path = 'results/pretrain/qwen-audio-2/checkpoint-1017/pretrain_weights.bin'
+    ckpt_path = 'results/pretrain/llama-audio-qformer/checkpoint-best/pretrain_weights.bin'
     ckpt = torch.load(ckpt_path,map_location='cpu')
     model.load_state_dict(ckpt,strict=False)
     model.cuda()
@@ -154,7 +154,7 @@ def train(attn_implementation=None):
     model.config.use_cache = True
     dataloader = DataLoader(dataset=dataset,batch_size=1,shuffle=False,collate_fn=collator)
     
-    fp = 'results/pretrain/qwen-audio-2/checkpoint-1017/inference_results.jsonl'
+    fp = 'results/pretrain/llama-audio-qformer/checkpoint-best/inference_results.jsonl'
     pbar = tqdm(total=len(dataloader),desc='inference')
 
     for step,sample in enumerate(dataloader):

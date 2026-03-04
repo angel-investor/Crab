@@ -6,8 +6,8 @@ NPROC_PER_NODE=8
 MASTER_PORT=6666
 RANK=0
 
-llama2_ckpt_path=/group/40061/cserdu/pretrain/Llama-2-7b-chat-hf
-qwen2_ckpt_path=/group/40061/cserdu/pretrain/Qwen2-7B-Instruct
+llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
+qwen2_ckpt_path=/root/autodl-tmp/Crab/pretrain/qwen2
 
 # Training Arguments
 LOCAL_BATCH_SIZE=4
@@ -41,14 +41,14 @@ python scripts/pretrain/inference.py \
     --image_caption_task False \
     --video_caption_task False \
     --video_frame_nums 8 \
-    --vit_ckpt_path /group/40061/cserdu/pretrain/openai-clip-vit-large-patch14-224 \
+    --vit_ckpt_path /root/autodl-tmp/Crab/pretrain/clip \
     --select_feature patch \
     --image_size 224 \
     --patch_size 14 \
     --visual_query_token_nums 32 \
     --audio_branch True \
     --audio_caption_task True \
-    --BEATs_ckpt_path /group/40061/cserdu/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt \
+    --BEATs_ckpt_path /root/autodl-tmp/Crab/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt \
     --audio_query_token_nums 32 \
     --seg_branch False \
     --segmentation_task False \

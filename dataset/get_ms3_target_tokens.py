@@ -35,12 +35,12 @@ vqgan=VQModel(
     lossconfig=None,
     n_embed=16384,
     embed_dim=256,
-    ckpt_path='/data/users/henghui_du/pretrain/vqgan_imagenet_f16_16384/ckpts/last.ckpt'
+    ckpt_path='/root/autodl-tmp/Crab/pretrain/vqgan/vqgan_imagenet_f16_16384/last.ckpt'
 )
 vqgan.eval()
 vqgan.cuda()
 
-data_root='/data/users/henghui_du/data/AVSBench-semantic'
+data_root='/root/autodl-tmp/Crab/data/AVSBench-semantic'
 set='v1m'
 vnames=os.listdir(join(data_root,set))
 pbar=tqdm(total=len(vnames),desc='Extract target tokens')

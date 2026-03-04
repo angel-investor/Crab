@@ -363,7 +363,7 @@ def inference_ref_avs_null(dataloader,ckpt_dir,model,tokenizer,test_name='test_n
 
 
 def inference_avss(dataloader,ckpt_dir,model,tokenizer):
-    v2_pallete = get_v2_pallete(label_to_idx_path='/group/40061/cserdu/data/AVS/label2idx.json',num_cls=71)
+    v2_pallete = get_v2_pallete(label_to_idx_path='/root/autodl-tmp/Crab/data/AVS/label2idx.json',num_cls=71)
     pbar = tqdm(total=len(dataloader),desc=f'inference avss')
     miou = 0.
     # metrics

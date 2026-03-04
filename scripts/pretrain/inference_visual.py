@@ -134,25 +134,15 @@ def train(attn_implementation=None):
                                   add_audio_tokens=True, add_mask_tokens=False)
     
     
-    ckpt_path = 'results/pretrain/qwen-visual/checkpoint-9000/pretrain_weights.bin'
+    ckpt_path = 'results/pretrain/llama-visual-qformer/checkpoint-best/pretrain_weights.bin'
     ckpt = torch.load(ckpt_path,map_location='cpu')
     model.load_state_dict(ckpt,strict=False)
     model.cuda()
     model.eval()
 
+    # TODO: 请将下面的列表替换为你服务器上实际的测试视频路径
     vpath_list = [
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_111.04_114.24.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_111.04_135.72.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_142.16_156.76.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_156.76_160.0.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_160.0_230.72.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_240.48_256.8.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_256.8_269.52.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_269.52_279.88.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_279.88_296.12.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/e0020786eop_split_224x224_305.52_325.64.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/j4100uwn8lx_split_224x224_136.4_204.48.mp4',
-        '/group/40061/cserdu/longVideo/LongVideoLLM/data/j4100uwn8lx_split_224x224_476.24_536.4.mp4',
+        # '/root/autodl-tmp/Crab/data/test_videos/video1.mp4',
     ]
     dataset,collator = get_dataset_collator(
         data_args=data_args,
@@ -167,7 +157,7 @@ def train(attn_implementation=None):
     model.config.use_cache = True
     dataloader = DataLoader(dataset=dataset,batch_size=1,shuffle=False,collate_fn=collator)
     
-    fp = 'results/pretrain/qwen-visual/checkpoint-9000/inference_results.jsonl'
+    fp = 'results/pretrain/llama-visual-qformer/checkpoint-best/inference_results.jsonl'
     pbar = tqdm(total=len(dataloader),desc='inference')
 
     for step,sample in enumerate(dataloader):

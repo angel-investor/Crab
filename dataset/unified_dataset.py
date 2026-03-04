@@ -30,7 +30,7 @@ MS3 dataset:
     - test: 320
 '''
 
-label_to_idx_path = '/group/40061/cserdu/data/AVS/label2idx.json'
+label_to_idx_path = '/root/autodl-tmp/Crab/data/AVS/label2idx.json'
 
 def get_v2_pallete(label_to_idx_path, num_cls=71):
     def _getpallete(num_cls=71):
@@ -155,7 +155,7 @@ class UnifiedDataset(Dataset):
 
     def add_avqa_task_samples(self):
         avqa_annotation_path = 'data/music_avqa_data/valid_train_samples.json'
-        avqa_data_root = '/group/40061/cserdu/data/music-avqa'
+        avqa_data_root = '/root/autodl-tmp/Crab/data/music-avqa'
         tot = 0
         with open(avqa_annotation_path,'r') as f:
             samples = json.load(f)
@@ -192,7 +192,7 @@ class UnifiedDataset(Dataset):
 
     def add_ave_task_samples(self):
         ave_annotation_path = 'data/ave_data/valid_train_samples.json'
-        ave_data_root = '/group/40061/cserdu/data/ave/AVE_Dataset'
+        ave_data_root = '/root/autodl-tmp/Crab/data/ave/AVE_Dataset'
         tot = 0
         with open(ave_annotation_path,'r') as f:
             samples = json.load(f)
@@ -225,7 +225,7 @@ class UnifiedDataset(Dataset):
 
     def add_avvp_task_samples(self):
         avvp_annotation_path = 'data/avvp_data/train_samples.json'
-        avvp_data_root = '/group/40061/cserdu/data/avvp'
+        avvp_data_root = '/root/autodl-tmp/Crab/data/avvp'
         tot = 0
         with open(avvp_annotation_path,'r') as f:
             samples = json.load(f)
@@ -266,7 +266,7 @@ class UnifiedDataset(Dataset):
 
 
     def add_ms3_task_samples(self):
-        avs_data_root='/group/40061/cserdu/data/AVS'
+        avs_data_root='/root/autodl-tmp/Crab/data/AVS'
         tot = 0
         with open(join(avs_data_root,'ms3_samples.json'),'r') as f:
             samples = json.load(f)
@@ -324,7 +324,7 @@ class UnifiedDataset(Dataset):
 
 
     def add_s4_task_samples(self):
-        avs_data_root='/group/40061/cserdu/data/AVS'
+        avs_data_root='/root/autodl-tmp/Crab/data/AVS'
         tot = 0
         with open(join(avs_data_root,'s4_samples.json'),'r') as f:
             samples = json.load(f)
@@ -363,7 +363,7 @@ class UnifiedDataset(Dataset):
 
 
     def add_avss_task_samples(self):
-        avs_data_root='/group/40061/cserdu/data/AVS'
+        avs_data_root='/root/autodl-tmp/Crab/data/AVS'
         tot = 0
         with open(join(avs_data_root,'avss_samples.json'),'r') as f:
             samples = json.load(f)
@@ -460,7 +460,7 @@ class UnifiedDataset(Dataset):
 
 
     def add_grounded_vqa_samples(self):
-        data_root = '/group/40061/cserdu/data/GroundedVQA'
+        data_root = '/root/autodl-tmp/Crab/data/GroundedVQA'
         tot = 0
         with open(join(data_root,'train_grounding.json'),'r') as f:
             data = json.load(f)
@@ -494,7 +494,7 @@ class UnifiedDataset(Dataset):
 
 
     def add_arig_samples(self,):
-        data_root = '/group/40061/cserdu/data/AVS'
+        data_root = '/root/autodl-tmp/Crab/data/AVS'
         tot = 0
         # vnames = set()
         with open(join(data_root,'v1s_grounding_samples.json'),'r') as f:
@@ -584,7 +584,7 @@ class UnifiedDataset(Dataset):
 
 
     def add_avcap_samples(self):
-        data_root = '/group/40061/cserdu/data/valor'
+        data_root = '/root/autodl-tmp/Crab/data/valor'
         tot = 0
         with open(join(data_root,'train_samples.json'),'r') as f:
             samples = json.load(f)
@@ -609,7 +609,7 @@ class UnifiedDataset(Dataset):
 
 
     def add_ref_avs_samples(self):
-        data_root = '/group/40061/cserdu/data/ref-avs/REFAVS'
+        data_root = '/root/autodl-tmp/Crab/data/ref-avs/REFAVS'
         tot = 0
         with open(join(data_root,'metadata.csv'),'r') as f:
             rows = csv.reader(f)
@@ -1355,7 +1355,7 @@ class UnifiedTestDataset(Dataset):
 
     def add_avqa_task_samples(self):
         avqa_annotation_path = 'data/music_avqa_data/test_samples.json'
-        avqa_data_root = '/group/40061/cserdu/data/music-avqa'
+        avqa_data_root = '/root/autodl-tmp/Crab/data/music-avqa'
         tot = 0
         with open(avqa_annotation_path,'r') as f:
             samples = json.load(f)
@@ -1387,7 +1387,7 @@ class UnifiedTestDataset(Dataset):
 
     def add_ave_task_samples(self):
         ave_annotation_path = 'data/ave_data/test_samples.json'
-        ave_data_root = '/group/40061/cserdu/data/ave/AVE_Dataset'
+        ave_data_root = '/root/autodl-tmp/Crab/data/ave/AVE_Dataset'
         tot = 0
         with open(ave_annotation_path,'r') as f:
             samples = json.load(f)
@@ -1414,7 +1414,7 @@ class UnifiedTestDataset(Dataset):
 
     def add_avvp_task_samples(self):
         avvp_annotation_path = 'data/avvp_data/test_samples.json'
-        avvp_data_root = '/group/40061/cserdu/data/avvp'
+        avvp_data_root = '/root/autodl-tmp/Crab/data/avvp'
         tot = 0
         with open(avvp_annotation_path,'r') as f:
             samples = json.load(f)
@@ -1440,7 +1440,7 @@ class UnifiedTestDataset(Dataset):
 
 
     def add_ms3_task_samples(self):
-        avs_data_root='/group/40061/cserdu/data/AVS'
+        avs_data_root='/root/autodl-tmp/Crab/data/AVS'
         tot = 0
         with open(join(avs_data_root,'ms3_samples.json'),'r') as f:
             samples = json.load(f)
@@ -1511,7 +1511,7 @@ class UnifiedTestDataset(Dataset):
 
 
     def add_s4_task_samples(self):
-        avs_data_root='/group/40061/cserdu/data/AVS'
+        avs_data_root='/root/autodl-tmp/Crab/data/AVS'
         tot = 0
         with open(join(avs_data_root,'s4_samples.json'),'r') as f:
             samples = json.load(f)
@@ -1552,7 +1552,7 @@ class UnifiedTestDataset(Dataset):
 
 
     def add_avss_task_samples(self):
-        avs_data_root='/group/40061/cserdu/data/AVS'
+        avs_data_root='/root/autodl-tmp/Crab/data/AVS'
         tot = 0
         with open(join(avs_data_root,'avss_samples.json'),'r') as f:
             samples = json.load(f)
@@ -1606,7 +1606,7 @@ class UnifiedTestDataset(Dataset):
 
 
     def add_arig_samples(self,):
-        data_root = '/group/40061/cserdu/data/AVS'
+        data_root = '/root/autodl-tmp/Crab/data/AVS'
         tot = 0
         with open(join(data_root,'v1s_grounding_samples.json'),'r') as f:
             samples = json.load(f)
@@ -1676,8 +1676,8 @@ class UnifiedTestDataset(Dataset):
 
 
     def add_avs_bench_samples(self):
-        data_root = '/group/40061/cserdu/data/AVS'
-        with open('/group/40061/cserdu/Unified/SSLalignment/metadata/s4_box.json','r') as f:
+        data_root = '/root/autodl-tmp/Crab/data/AVS'
+        with open('/root/autodl-tmp/Crab/data/SSLalignment/metadata/s4_box.json','r') as f:
             samples = json.load(f)
             for sample in samples:
                 image = sample['image']
@@ -1685,7 +1685,7 @@ class UnifiedTestDataset(Dataset):
                 
 
     def add_avcap_samples(self):
-        data_root = '/group/40061/cserdu/data/valor'
+        data_root = '/root/autodl-tmp/Crab/data/valor'
         tot = 0
         with open(join(data_root,'val_samples.json'),'r') as f:
             samples = json.load(f)
@@ -1710,7 +1710,7 @@ class UnifiedTestDataset(Dataset):
 
 
     def add_ref_avs_samples(self):
-        data_root = '/group/40061/cserdu/data/ref-avs/REFAVS'
+        data_root = '/root/autodl-tmp/Crab/data/ref-avs/REFAVS'
         tot = 0
         with open(join(data_root,'metadata.csv'),'r') as f:
             rows = csv.reader(f)

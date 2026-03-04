@@ -6,7 +6,7 @@ import transformers
 @dataclass
 class ModelArguments:  
     # llm
-    model_name_or_path: Optional[str] = field(default="/data/users/henghui_du/pretrain/video-llama2/Mistral-7B-Instruct-v0.2")
+    model_name_or_path: Optional[str] = field(default="/root/autodl-tmp/Crab/pretrain/llama2")
     freeze_backbone: bool = field(default=True, metadata={"help": "Whether to freeze the LLM backbone."})
     llm_name: str = field(default='qwen')
     ## visual module

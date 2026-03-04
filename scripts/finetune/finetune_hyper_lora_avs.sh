@@ -6,8 +6,8 @@ NPROC_PER_NODE=16
 MASTER_PORT=6667
 RANK=0
 
-llama2_ckpt_path=''
-qwen2_ckpt_path=''
+llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
+qwen2_ckpt_path=/root/autodl-tmp/Crab/pretrain/qwen2
 
 # Training Arguments
 LOCAL_BATCH_SIZE=16
@@ -38,8 +38,8 @@ torchrun --nproc_per_node $NPROC_PER_NODE \
     --bf16 False \
     --tf32 False \
     --fp16 False \
-    --pretrain_ckpt_dir "your pretrain ckpt dir" \
-    --finetune_ckpt_dir "your finetune ckpt dir" \
+    --pretrain_ckpt_dir /root/autodl-tmp/Crab/pretrain_ckpt \
+    --finetune_ckpt_dir /root/autodl-tmp/Crab/ckpt \
     --avqa_task False \
     --ave_task False \
     --avvp_task False \
@@ -53,13 +53,13 @@ torchrun --nproc_per_node $NPROC_PER_NODE \
     --multi_frames False \
     --visual_branch True \
     --video_frame_nums 10 \
-    --vit_ckpt_path '' \
+    --vit_ckpt_path /root/autodl-tmp/Crab/pretrain/clip \
     --select_feature patch \
     --image_size 224 \
     --patch_size 14 \
     --visual_query_token_nums 32 \
     --audio_branch True \
-    --BEATs_ckpt_path '' \
+    --BEATs_ckpt_path /root/autodl-tmp/Crab/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt \
     --audio_query_token_nums 32 \
     --seg_branch True \
     --prompt_embed_dim 256 \

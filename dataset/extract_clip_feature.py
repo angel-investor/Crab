@@ -12,7 +12,7 @@ model=CLIPVisionTower()
 model.eval()
 model.cuda()
 
-data_root='/data/users/henghui_du/data/AVSBench-semantic'
+data_root='/root/autodl-tmp/Crab/data/AVSBench-semantic'
 set='v1s'
 vnames=os.listdir(join(data_root,set))
 pabr=tqdm(total=len(vnames),desc='Extract CLIP Feature')

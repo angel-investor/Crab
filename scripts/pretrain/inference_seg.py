@@ -152,7 +152,7 @@ def train(attn_implementation=None):
         model.load_state_dict(ckpt,strict=False)
         print('load visual ckpt finished...')
 
-    ckpt_dir = 'results/pretrain/001-llama-seg/checkpoint-28544'
+    ckpt_dir = 'results/pretrain/llama-seg/checkpoint-best'
     non_lora_ckpt_path = join(ckpt_dir,'seg_module_pretrain_weights.bin')
     ckpt = torch.load(non_lora_ckpt_path,map_location='cpu')
     model.load_state_dict(ckpt,strict=False)

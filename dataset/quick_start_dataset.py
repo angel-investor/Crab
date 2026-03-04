@@ -30,7 +30,7 @@ MS3 dataset:
     - test: 320
 '''
 
-label_to_idx_path = '/group/40061/cserdu/data/AVS/label2idx.json'
+label_to_idx_path = '/root/autodl-tmp/Crab/data/AVS/label2idx.json'
 
 def get_v2_pallete(label_to_idx_path, num_cls=71):
     def _getpallete(num_cls=71):
