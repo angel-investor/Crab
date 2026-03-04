@@ -71,8 +71,8 @@ python scripts/quick_start.py \
     --prompt_embed_dim 256 \
     --mask_decoder_transformer_depth 2 \
     --low_res_mask_size 112 \
-    --image_scale_nums 1 \
-    --token_nums_per_scale 5 \
+    --image_scale_nums 2 \
+    --token_nums_per_scale 3 \
     --avs_query_num 300 \
     --num_classes 1 \
     --query_generator_num_layers 2 \

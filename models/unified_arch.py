@@ -427,7 +427,7 @@ class UnifiedMetaForCausalLM(ABC):
             self.KEYS.append('<mask>')
 
         seg_tokens = [f'<mask_{i}>' for i in range(mask_token_nums)]
-        num_new_tokens += tokenizer.add_tokens(seg_tokens,special_tokens=False)
+        num_new_tokens += tokenizer.add_tokens(seg_tokens,special_tokens=True)
         added_tokens += seg_tokens
         
         ### tag token
