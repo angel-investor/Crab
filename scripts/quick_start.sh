@@ -7,7 +7,7 @@ MASTER_PORT=6666
 RANK=0
 
 llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
-qwen2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
+qwen2_ckpt_path=/root/autodl-tmp/Crab/pretrain/qwen2
 dockerdata_llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
 
 # Training Arguments
