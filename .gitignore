@@ -3,7 +3,7 @@
 pretrain/
 ckpt/
 avs_ckpt/
-prtrain_ckpt_dir/
+prtrain_ckpt/
 .ipynb_checkpoints
 .idea
 # Python 缓存
