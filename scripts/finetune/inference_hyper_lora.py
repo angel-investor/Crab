@@ -1,8 +1,9 @@
-import os,sys
+import os,sys,json
 sys.path.append(os.getcwd())
 from os.path import join,exists
 import pathlib
 from tqdm import tqdm
+
 import numpy as np
 from PIL import Image
 import torch
@@ -155,61 +156,87 @@ def inference_avs(dataloader,ckpt_dir,task_name,model,tokenizer):
     # print('task_name: ',task_name,' all video miou: ',miou)
 
 
-def inference_avqa(dataloader,ckpt_dir,model,tokenizer):
-    save_dir = join(ckpt_dir,f'inference_avqa')
-    os.makedirs(save_dir,exist_ok=True)
-    pbar = tqdm(total=len(dataloader),desc=f'inference avqa')
-    fp = join(save_dir,'infer_results.jsonl')
+def inference_avqa(dataloader, ckpt_dir, model, tokenizer, mask_audio=False):
+    """
+    MUSIC-AVQA 推理函数。
 
-    log_route_weight = False
-    if log_route_weight:
-        model.model.log_route_weight = log_route_weight  ### log route weight
-        route_weight_dir = join(save_dir,'route_weights')
-        os.makedirs(route_weight_dir,exist_ok=True)
+    Args:
+        dataloader: 数据加载器
+        ckpt_dir: 权重目录（结果也保存在此）
+        model: 推理模型
+        tokenizer: 分词器
+        mask_audio: 若为 True，则将音频 Token 清零（用于音频消融实验）
+    """
+    suffix = '_no_audio' if mask_audio else ''
+    save_dir = join(ckpt_dir, f'inference_avqa{suffix}')
+    os.makedirs(save_dir, exist_ok=True)
+    pbar = tqdm(total=len(dataloader), desc=f'inference avqa{suffix}')
+    fp = join(save_dir, 'infer_results.jsonl')
 
+    # 音频消融：注册 forward hook，将音频 Embedding 清零
+    hook_handle = None
+    if mask_audio:
+        def zero_audio_hook(module, input, output):
+            """将音频 Token 输出清零，模拟无音频输入。"""
+            return torch.zeros_like(output)
+        # BEATs 编码器输出 hook
+        hook_handle = model.get_model().audio_encoder.register_forward_hook(zero_audio_hook)
+        print('[消融实验] 音频 Token 已清零，开始无音频推理...')
+
+    # ---- 推理循环 ----
     for step, sample in enumerate(dataloader):
         batch_metadata = sample.pop('batch_metadata')
         bs = len(batch_metadata)
-        sample = prepare_sample(data = sample)
-        sample.update(
-            {
-                'use_cache':True,
-                'max_new_tokens':500,
-            }
-        )
+        sample = prepare_sample(data=sample)
+        sample.update({'use_cache': True, 'max_new_tokens': 500})
         with torch.no_grad():
             output = model.generate(**sample)
-            output = tokenizer.batch_decode(output,skip_special_tokens=False)
+            output = tokenizer.batch_decode(output, skip_special_tokens=False)
         for i in range(bs):
             metadata = batch_metadata[i]
             metadata['predict'] = output[i]
-            write2json(fp=fp,dict_data=metadata)
-
-            if log_route_weight:
-                q_token_weight = torch.cat(model.model.q_token_weight,dim=0) # seg_len, 32, 1, 3
-                k_token_weight = torch.cat(model.model.k_token_weight,dim=0) # seg_len, 32, 1, 3
-                v_token_weight = torch.cat(model.model.v_token_weight,dim=0) # seg_len, 32, 1, 3
-                o_token_weight = torch.cat(model.model.o_token_weight,dim=0) # seg_len, 32, 1, 3
-                
-                dir = join(route_weight_dir,str(step+1))
-                os.makedirs(dir,exist_ok=True)
-                np.save(join(dir,'q_token_weight.npy'),q_token_weight.cpu().data.numpy())
-                np.save(join(dir,'k_token_weight.npy'),k_token_weight.cpu().data.numpy())
-                np.save(join(dir,'v_token_weight.npy'),v_token_weight.cpu().data.numpy())
-                np.save(join(dir,'o_token_weight.npy'),o_token_weight.cpu().data.numpy())
-
-                model.model.q_token_weight = []
-                model.model.k_token_weight = []
-                model.model.v_token_weight = []
-                model.model.o_token_weight = []
-                model.model.token_nums = 0
-        
+            write2json(fp=fp, dict_data=metadata)
         pbar.update(1)
-
-        # if step > 2000:
-        #     break
-        
     pbar.close()
+
+    # 移除 hook
+    if hook_handle is not None:
+        hook_handle.remove()
+
+    # ---- 自动计算 Accuracy ----
+    import re
+    correct = 0
+    total = 0
+    with open(fp, 'r') as f:
+        for line in f:
+            item = json.loads(line.strip())
+            predict_text = item.get('predict', '')
+            gt_output = item.get('output', '')  # "According to the video and audio, the answer is XXX."
+            # 从 gt_output 中提取答案
+            gt_match = re.search(r'the answer is\s+(\S+?)\.?$', gt_output, re.IGNORECASE)
+            if gt_match is None:
+                continue
+            gt_answer = gt_match.group(1).strip().lower()
+            # 从预测文本中提取 <answer>XXX</answer> 或 "answer is XXX"
+            pred_match = re.search(r'<answer>\s*(.+?)\s*</answer>', predict_text, re.IGNORECASE)
+            if pred_match is None:
+                pred_match = re.search(r'(?:the answer is|answer:)\s*(\S+)', predict_text, re.IGNORECASE)
+            if pred_match is None:
+                total += 1
+                continue
+            pred_answer = pred_match.group(1).strip().lower().rstrip('.,;')
+            if pred_answer == gt_answer:
+                correct += 1
+            total += 1
+
+    accuracy = correct / total if total > 0 else 0.0
+    tag = '（无音频消融）' if mask_audio else '（正常推理基线）'
+    print(f'\n========== AVQA Accuracy {tag} ==========')
+    print(f'  正确数: {correct}  总数: {total}  Accuracy: {accuracy:.4f} ({accuracy*100:.2f}%)')
+    print(f'  结果文件: {fp}')
+    print('=' * 50)
+
+
 
 
 def inference_ave(dataloader,ckpt_dir,model,tokenizer):
@@ -1491,7 +1518,9 @@ def train(attn_implementation=None):
         # inference_avss_token(dataloader=dataloader,ckpt_dir=ckpt_dir,model=model,tokenizer=tokenizer)
         inference_avss_ntp(dataloader=dataloader,ckpt_dir=ckpt_dir,model=model,tokenizer=tokenizer)
     if data_args.avqa_task:
-        inference_avqa(dataloader=dataloader,ckpt_dir=ckpt_dir,model=model,tokenizer=tokenizer)
+        inference_avqa(dataloader=dataloader, ckpt_dir=ckpt_dir, model=model, tokenizer=tokenizer,
+                       mask_audio=infer_args.mask_audio_for_ablation)
+
     if data_args.ave_task:
         inference_ave(dataloader=dataloader,ckpt_dir=ckpt_dir,model=model,tokenizer=tokenizer)
     if data_args.avvp_task:

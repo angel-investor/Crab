@@ -42,6 +42,12 @@ class InferenceArguments:
     test_name: str = field(default='test') # for ref-avs: test_u,test_s,test_n
 
     device: str = field(default='cuda:0')
+
+    # 音频消融实验开关：True = 将音频 Token 清零（模拟无音频），False = 正常推理
+    mask_audio_for_ablation: bool = field(
+        default=False,
+        metadata={"help": "If True, zero out audio tokens to measure audio contribution (ablation study)."}
+    )
     
 
 @dataclass
