@@ -1493,7 +1493,8 @@ def train(attn_implementation=None):
 
     device = infer_args.device
     torch.cuda.set_device(device)
-    model.npu()
+    model.to(device)
+
     model.eval()
     # model.to(torch.bfloat16)
     
