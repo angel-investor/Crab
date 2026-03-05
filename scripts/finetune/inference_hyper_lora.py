@@ -1444,6 +1444,7 @@ def train(attn_implementation=None):
                                               visual_query_token_nums=model_args.visual_query_token_nums,
                                               audio_query_token_nums=model_args.audio_query_token_nums,
                                               BEATs_ckpt_path=model_args.BEATs_ckpt_path,
+                                              bert_ckpt_path=model_args.bert_ckpt_path,
                                               prompt_embed_dim=model_args.prompt_embed_dim,
                                               mask_decoder_transformer_depth=model_args.mask_decoder_transformer_depth,
                                               low_res_mask_size=model_args.low_res_mask_size,
