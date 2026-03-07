@@ -25,22 +25,24 @@ def eval_avqa():
             predict_text = item.get('predict', '')
             gt_output = item.get('output', '')
             
-            # Extract GT answer
-            gt_match = re.search(r'the answer is\s+(\S+?)\.?$', gt_output, re.IGNORECASE)
-            if gt_match is None:
+            # 提取 GT 答案（去掉 </s> 和空格）
+            gt_answer = gt_output.replace('</s>', '').strip().lower()
+            if not gt_answer:
                 continue
-            gt_answer = gt_match.group(1).strip().lower()
             
-            # Extract Pred answer
+            # 提取 Pred 答案
+            # 优先匹配 <answer>...</answer>
             pred_match = re.search(r'<answer>\s*(.+?)\s*</answer>', predict_text, re.IGNORECASE)
-            if pred_match is None:
-                pred_match = re.search(r'(?:the answer is|answer:)\s*(\S+)', predict_text, re.IGNORECASE)
-            
-            if pred_match is None:
-                total += 1
-                continue
-                
-            pred_answer = (pred_match.group(1) or pred_match.group(2)).strip().lower().rstrip('.,;')
+            if pred_match:
+                pred_answer = pred_match.group(1).strip().lower()
+            else:
+                # 备选匹配：匹配 "the answer is XXX" 或 "answer: XXX"
+                alt_match = re.search(r'(?:the answer is|answer:)\s*(\S+)', predict_text, re.IGNORECASE)
+                if alt_match:
+                    pred_answer = alt_match.group(1).strip().lower().rstrip('.,;')
+                else:
+                    total += 1
+                    continue
             
             if pred_answer == gt_answer:
                 correct += 1
