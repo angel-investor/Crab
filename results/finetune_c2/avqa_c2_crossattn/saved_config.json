@@ -72,7 +72,7 @@
         "log_level": "passive",
         "log_level_replica": "warning",
         "log_on_each_node": true,
-        "logging_dir": "results/finetune_c2/avqa_c2_crossattn/runs/Mar08_01-17-54_autodl-container-x0h7zww1t5-9dd07626",
+        "logging_dir": "results/finetune_c2/avqa_c2_crossattn/runs/Mar08_01-30-02_autodl-container-x0h7zww1t5-9dd07626",
         "logging_strategy": "steps",
         "logging_first_step": false,
         "logging_steps": 10,

@@ -6,6 +6,7 @@ avs_ckpt/
 pretrain_ckpt/
 .ipynb_checkpoints
 .idea
+logs/
 # Python 缓存
 **/__pycache__/
 *.pyc

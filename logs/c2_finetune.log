@@ -3,43 +3,29 @@
    GLOBAL_BATCH_SIZE = 32
 ==================================================
 no npu!
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.10it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.70it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.57it/s]
-/root/miniconda3/envs/crab39/lib/python3.9/site-packages/huggingface_hub/file_download.py:1150: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
-  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.12it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.75it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.62it/s]
+/root/miniconda3/envs/crab39/lib/python3.9/site-packages/torch/nn/utils/weight_norm.py:30: UserWarning: torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.
+  warnings.warn("torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.")
 ori_tokenizer_vocab_nums:  32001  MM_tokenizer_vocab_nums:  32018
+init visual_encoder, vl_projector finished...
+init audio_encoder, al_projector finished...
+pop embed weight, shape: torch.Size([32017, 4096]) load ckpt from path: /root/autodl-tmp/Crab/pretrain_ckpt
+pop embed weight, shape: torch.Size([32017, 4096])  load ckpt from path: /root/autodl-tmp/Crab/pretrain_ckpt
+[热启动] 从 finetune 权重加载: /root/autodl-tmp/Crab/ckpt/finetune_weights.bin
+[热启动] missing keys (新模块，正常): 946
+[热启动] unexpected keys: 0
+save_modules: vl_projector,al_projector,lora,av_fusion
+trainable_params: 258.617MB
+mask token:  <mask_0><mask_1><mask_2><mask_3><mask_4><mask_5>
 Traceback (most recent call last):
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/transformers/utils/hub.py", line 385, in cached_file
-    resolved_file = hf_hub_download(
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/huggingface_hub/utils/_deprecation.py", line 101, in inner_f
-    return f(*args, **kwargs)
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
-    return fn(*args, **kwargs)
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/huggingface_hub/file_download.py", line 1240, in hf_hub_download
-    return _hf_hub_download_to_cache_dir(
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/huggingface_hub/file_download.py", line 1347, in _hf_hub_download_to_cache_dir
-    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/huggingface_hub/file_download.py", line 1848, in _raise_on_head_call_error
-    raise LocalEntryNotFoundError(
-huggingface_hub.utils._errors.LocalEntryNotFoundError: Cannot find the requested files in the disk cache and outgoing traffic has been disabled. To enable hf.co look-ups and downloads online, set 'local_files_only' to False.
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/root/autodl-tmp/Crab/scripts/finetune/finetune_hyperlora.py", line 264, in <module>
+  File "/root/autodl-tmp/Crab/scripts/finetune/finetune_hyperlora.py", line 265, in <module>
     train()
-  File "/root/autodl-tmp/Crab/scripts/finetune/finetune_hyperlora.py", line 157, in train
-    model.get_model().init_multimodal_modules(visual_branch=training_args.visual_branch,
-  File "/root/autodl-tmp/Crab/models/unified_arch.py", line 80, in init_multimodal_modules
-    self.vl_projector = VLProjector(bert_ckpt_path=bert_ckpt_path, hidden_size=1024, d_model=d_model, depth=2, image_token_nums=image_token_nums,
-  File "/root/autodl-tmp/Crab/models/multimodal_encoder.py", line 107, in __init__
-    encoder_config = BertConfig.from_pretrained(bert_ckpt_path,local_files_only=True)
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/transformers/configuration_utils.py", line 605, in from_pretrained
-    config_dict, kwargs = cls.get_config_dict(pretrained_model_name_or_path, **kwargs)
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/transformers/configuration_utils.py", line 634, in get_config_dict
-    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/transformers/configuration_utils.py", line 689, in _get_config_dict
-    resolved_config_file = cached_file(
-  File "/root/miniconda3/envs/crab39/lib/python3.9/site-packages/transformers/utils/hub.py", line 425, in cached_file
-    raise EnvironmentError(
-OSError: We couldn't connect to 'https://huggingface.co' to load this file, couldn't find it in the cached files and it looks like None is not the path to a directory containing a file named config.json.
-Checkout your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.
+  File "/root/autodl-tmp/Crab/scripts/finetune/finetune_hyperlora.py", line 235, in train
+    dataset, collator = get_dataset_collator(data_args=data_args, tokenizer=tokenizer, 
+  File "/root/autodl-tmp/Crab/dataset/unified_dataset.py", line 2410, in get_dataset_collator
+    dataset = UnifiedDataset(
+  File "/root/autodl-tmp/Crab/dataset/unified_dataset.py", line 123, in __init__
+    self.add_avqa_task_samples()
+  File "/root/autodl-tmp/Crab/dataset/unified_dataset.py", line 160, in add_avqa_task_samples
+    with open(avqa_annotation_path,'r') as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'data/music_avqa_data/valid_train_samples.json'
