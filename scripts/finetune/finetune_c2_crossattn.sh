@@ -48,7 +48,7 @@ python scripts/finetune/finetune_hyperlora.py \
     --bf16 True \
     --tf32 False \
     --fp16 False \
-    --pretrain_ckpt_dir /root/autodl-tmp/Crab/ckpt \
+    --pretrain_ckpt_dir /root/autodl-tmp/Crab/pretrain_ckpt \
     --avqa_task True \
     --ave_task False \
     --avvp_task False \
