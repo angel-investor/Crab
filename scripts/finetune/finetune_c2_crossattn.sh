@@ -16,7 +16,7 @@ llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
 
 # Training Arguments
 LOCAL_BATCH_SIZE=4
-GRADIENT_ACCUMULATION_STEPS=8
+GRADIENT_ACCUMULATION_STEPS=4   # 从 8 降到 4，总步数减半
 GLOBAL_BATCH_SIZE=$((WORLD_SIZE * NPROC_PER_NODE * LOCAL_BATCH_SIZE * GRADIENT_ACCUMULATION_STEPS))
 
 # Log Arguments
@@ -63,7 +63,7 @@ python scripts/finetune/finetune_hyperlora.py \
     --save_modules vl_projector,al_projector,lora,av_fusion \
     --multi_frames False \
     --visual_branch True \
-    --video_frame_nums 8 \
+    --video_frame_nums 4 \
     --vit_ckpt_path /root/autodl-tmp/Crab/pretrain/clip \
     --select_feature patch \
     --image_size 224 \
@@ -86,14 +86,14 @@ python scripts/finetune/finetune_hyperlora.py \
     --dice_loss_weight 0.5 \
     --bce_loss_weight 1.0 \
     --output_dir $OUTP_DIR/$WANDB_PROJECT/$RUN_NAME \
-    --num_train_epochs 3 \
+    --num_train_epochs 1 \
     --per_device_train_batch_size $LOCAL_BATCH_SIZE \
     --per_device_eval_batch_size $LOCAL_BATCH_SIZE \
     --gradient_accumulation_steps $GRADIENT_ACCUMULATION_STEPS \
     --ddp_find_unused_parameters True \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 0.5 \
+    --save_steps 1.0 \
     --save_total_limit 3 \
     --learning_rate 2e-5 \
     --weight_decay 0. \
@@ -102,5 +102,5 @@ python scripts/finetune/finetune_hyperlora.py \
     --logging_steps 10 \
     --gradient_checkpointing True \
     --half_precision_backend "auto" \
-    --dataloader_num_workers 4 \
+    --dataloader_num_workers 8 \
     --report_to tensorboard
