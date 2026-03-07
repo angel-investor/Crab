@@ -207,7 +207,7 @@ def inference_avqa(dataloader, ckpt_dir, model, tokenizer, mask_audio=False):
     import re
     correct = 0
     total = 0
-    with open(fp, 'r') as f:
+    with open(fp, 'r', encoding='utf-8') as f:
         for line in f:
             item = json.loads(line.strip())
             predict_text = item.get('predict', '')
