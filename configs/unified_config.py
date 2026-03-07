@@ -132,3 +132,6 @@ class TrainingArguments(transformers.TrainingArguments):
     use_hyper_lora: bool = field(default=True)
 
     unifed_finetune_ckpt_path: str = field(default='')
+
+    pretrain_ckpt_dir: str = field(default='', metadata={"help": "Directory containing audio_pretrain.bin and visual_pretrain.bin."})
+    finetune_ckpt_dir: str = field(default='', metadata={"help": "Directory or path for loading finetune checkpoint (used in AVS finetune)."})
