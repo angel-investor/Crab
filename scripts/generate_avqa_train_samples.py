@@ -14,7 +14,12 @@ AVQA_ROOT = '/root/autodl-tmp/Crab/data/music-avqa'
 QA_TRAIN_JSON = os.path.join(AVQA_ROOT, 'avqa-train.json')  # MUSIC-AVQA 原始训练集标注
 VIDEO_DIR = os.path.join(AVQA_ROOT, 'avqa-videos/MUSIC-AVQA-videos-Real')
 AUDIO_DIR = os.path.join(AVQA_ROOT, 'audio')
+CONVERTED_LABEL_DIR = os.path.join(AVQA_ROOT, 'converted_label')  # 训练 label txt 文件目录
 OUTPUT_PATH = 'data/music_avqa_data/valid_train_samples.json'
+
+def make_label_text(answer: str) -> str:
+    """生成训练目标文本，与推理输出格式匹配。"""
+    return f"According to the video and audio, the answer is {answer}."
 
 def main():
     if not os.path.exists(QA_TRAIN_JSON):
@@ -78,6 +83,17 @@ def main():
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(samples, f, ensure_ascii=False, indent=2)
     print(f"已保存至：{OUTPUT_PATH}")
+
+    # 同时生成 converted_label/{question_id}.txt 训练目标文件
+    os.makedirs(CONVERTED_LABEL_DIR, exist_ok=True)
+    label_generated = 0
+    for s in samples:
+        label_path = os.path.join(CONVERTED_LABEL_DIR, f"{s['question_id']}.txt")
+        if not os.path.exists(label_path):
+            with open(label_path, 'w', encoding='utf-8') as lf:
+                lf.write(make_label_text(s['answer']))
+            label_generated += 1
+    print(f"已生成 {label_generated} 个 converted_label txt 文件 (路径: {CONVERTED_LABEL_DIR})")
 
     # 验证第一条
     if samples:
