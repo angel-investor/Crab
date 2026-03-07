@@ -188,7 +188,7 @@ def inference_avqa(dataloader, ckpt_dir, model, tokenizer, mask_audio=False):
         batch_metadata = sample.pop('batch_metadata')
         bs = len(batch_metadata)
         sample = prepare_sample(data=sample)
-        sample.update({'use_cache': True, 'max_new_tokens': 500})
+        sample.update({'use_cache': True, 'max_new_tokens': 80})  # AVQA 答案通常 <50 token，无需 500
         with torch.no_grad():
             output = model.generate(**sample)
             output = tokenizer.batch_decode(output, skip_special_tokens=False)
@@ -1494,7 +1494,8 @@ def train(attn_implementation=None):
     device = infer_args.device
     torch.cuda.set_device(device)
     model.to(device)
-
+    model.to(compute_dtype)  # 确保 LoRA 权重（从 fp32 checkpoint 加载）也运行在正确精度（bf16）下
+    
     model.eval()
     # model.to(torch.bfloat16)
     
