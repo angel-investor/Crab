@@ -1549,7 +1549,6 @@ def train(attn_implementation=None):
         inference_aok_vqa(dataloader=dataloader,ckpt_dir=ckpt_dir,model=model,tokenizer=tokenizer)
 
 if __name__ == "__main__":
-    # A800 (Ampere) 原生支持 SDPA (Scaled Dot-Product Attention)，
-    # 自动选用 FlashAttention 内核，attention 计算提速 2-4x
-    train(attn_implementation="sdpa")
-
+    # crab39 环境 torch==2.0.0，不满足 SDPA 要求的 >=2.1.1，使用默认 attention
+    # 其余优化（bf16/batch_size=16/inference_mode/pin_memory/num_workers）仍然有效
+    train(attn_implementation=None)

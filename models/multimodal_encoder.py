@@ -64,9 +64,11 @@ class VisualEncoder(nn.Module):
     
 
     @torch.no_grad()
-    def encode_video(self,video):
-        b,t,c,h,w = video.shape
-        video = video.reshape(b*t,c,h,w)
+    def encode_video(self, video):
+        b, t, c, h, w = video.shape
+        video = video.reshape(b*t, c, h, w)
+        # 修复 bf16 混合精度：DataLoader 输出 fp32，CLIP 权重转为 bf16 后需要转换输入类型
+        video = video.to(next(self.vision_tower.parameters()).dtype)
         video_forward_outs = self.vision_tower(video, output_hidden_states=True)
         video_feature = self.feature_select(video_forward_outs)
         return video_feature
@@ -165,8 +167,11 @@ class AudioEncoder(nn.Module):
 
 
     @torch.no_grad()
-    def encode_audio(self,audio):
-        audio_padding_mask = torch.zeros(audio.shape[:-1],device=audio.device).bool()
+    def encode_audio(self, audio):
+        # 修复 bf16 混合精度：DataLoader 输出 fp32，但 model.to(bf16) 后 BEATs 权重是 bf16
+        # 自动将输入转换为 patch_embedding 权重的数据类型，与修 LoRA 一致
+        audio = audio.to(self.audio_encoder.patch_embedding.weight.dtype)
+        audio_padding_mask = torch.zeros(audio.shape[:-1], device=audio.device).bool()
         audio_embeds, _ = self.audio_encoder.extract_features(audio, padding_mask=audio_padding_mask, feature_only=True)
         return audio_embeds
     
