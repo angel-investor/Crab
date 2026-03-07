@@ -344,7 +344,10 @@ class Linear(nn.Linear, LoraLayer):
             result = F.linear(x, transpose(self.weight, self.fan_in_fan_out), bias=self.bias)
             
             if self.r > 0:
-                route_weight = nn.functional.softmax(self.lora_route(x), dim=-1, dtype=torch.float32).to(result.dtype)
+                # 修复 bf16/fp16 混合精度下 lora_route 权重类型不匹配的问题
+                # lora_route 是 fp32 权重，输入 x 在 bf16 模式下是 bf16，需要转换类型
+                lora_route_dtype = self.lora_route.weight.dtype
+                route_weight = nn.functional.softmax(self.lora_route(x.to(lora_route_dtype)), dim=-1, dtype=torch.float32).to(result.dtype)
                 
                 for i in range(self.lora_num):
                     result = result + torch.unsqueeze(route_weight[:,:,i], -1) * getattr(self, f"lora_B{i}")(getattr(self, f"lora_A")(self.lora_dropout(x))) * self.scaling
