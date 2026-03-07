@@ -56,7 +56,7 @@ python scripts/finetune/inference_hyper_lora.py \
     --avss_task False \
     --ref_avs_task False \
     --avs_ckpt_dir /root/autodl-tmp/Crab/avs_ckpt \
-    --mask_audio_for_ablation False \
+    --mask_audio_for_ablation True \
     --test_name test \
     --device cuda:0 \
     --multi_frames False \

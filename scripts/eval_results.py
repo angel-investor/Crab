@@ -2,10 +2,19 @@ import json
 import re
 import os
 
-def eval_avqa():
-    fp = '/root/autodl-tmp/Crab/ckpt/inference_avqa/infer_results.jsonl'
+import sys
+
+def eval_avqa(fp=None):
+    if fp is None:
+        if len(sys.argv) > 1:
+            fp = sys.argv[1]
+        else:
+            # 默认指向刚才配置的消融实验结果路径（带 _no_audio 后缀）
+            fp = '/root/autodl-tmp/Crab/ckpt/inference_avqa_no_audio/infer_results.jsonl'
+            
     if not os.path.exists(fp):
         print(f"Error: {fp} not found.")
+        print("Usage: python scripts/eval_results.py [path_to_jsonl]")
         return
 
     correct = 0
