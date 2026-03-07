@@ -1495,9 +1495,12 @@ def train(attn_implementation=None):
     torch.cuda.set_device(device)
     model.to(device)
     model.to(compute_dtype)  # 确保 LoRA 权重（从 fp32 checkpoint 加载）也运行在正确精度（bf16）下
+    # BEATs pos_conv 使用 weight_norm，torch 2.0.x 不支持 bf16，audio_encoder 必须保持 fp32
+    # unified_arch.py encode_audio 会在进入 al_projector 前自动转换类型
+    if hasattr(model.get_model(), 'audio_encoder'):
+        model.get_model().audio_encoder.float()
     
     model.eval()
-    # model.to(torch.bfloat16)
     
     image_processor = model.get_model().visual_encoder.image_processor if training_args.visual_branch else None
     dataset, collator = get_dataset_collator(data_args=data_args, tokenizer=tokenizer, 

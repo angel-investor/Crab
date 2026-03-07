@@ -151,7 +151,10 @@ class UnifiedMetaModel:
 
 
     def encode_audio(self,audio):
-        audio_feature = self.audio_encoder(audio)
+        audio_feature = self.audio_encoder(audio)  # fp32（BEATs weight_norm 不支持 bf16）
+        # 在进入 al_projector（bf16）之前，将 fp32 特征转换为 al_projector 的 dtype
+        proj_dtype = next(self.al_projector.parameters()).dtype
+        audio_feature = audio_feature.to(proj_dtype)
         audio_feature = self.al_projector(audio_feature)
         return audio_feature
 

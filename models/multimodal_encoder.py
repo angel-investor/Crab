@@ -168,12 +168,11 @@ class AudioEncoder(nn.Module):
 
     @torch.no_grad()
     def encode_audio(self, audio):
-        # 修复 bf16 混合精度：DataLoader 输出 fp32，但 model.to(bf16) 后 BEATs 权重是 bf16
-        # 自动将输入转换为 patch_embedding 权重的数据类型，与修 LoRA 一致
-        audio = audio.to(self.audio_encoder.patch_embedding.weight.dtype)
+        # BEATs pos_conv 使用 weight_norm，torch 2.0.x 不支持 bf16
+        # 保持输入为 fp32，由调用方（unified_arch.py）负责将输出转换为目标 dtype
         audio_padding_mask = torch.zeros(audio.shape[:-1], device=audio.device).bool()
         audio_embeds, _ = self.audio_encoder.extract_features(audio, padding_mask=audio_padding_mask, feature_only=True)
-        return audio_embeds
+        return audio_embeds  # fp32
     
 
     def forward(self,audio):
