@@ -188,6 +188,18 @@ def train(attn_implementation=None):
     if weight is not None:
         print(f'pop embed weight, shape: {weight.shape}  load ckpt from path: {visual_ckpt_dir}')
 
+    # 热启动：在预训练权重基础上继续加载多任务微调权重（如 finetune_weights.bin）
+    # 新增模块（如 av_fusion）不在旧权重中，保持随机初始化自然学习
+    finetune_ckpt_path = training_args.unifed_finetune_ckpt_path
+    if finetune_ckpt_path and os.path.exists(finetune_ckpt_path):
+        print(f'[热启动] 从 finetune 权重加载: {finetune_ckpt_path}')
+        ft_ckpt = torch.load(finetune_ckpt_path, map_location='cpu')
+        missing, unexpected = model.load_state_dict(ft_ckpt, strict=False)
+        print(f'[热启动] missing keys (新模块，正常): {len(missing)}')
+        print(f'[热启动] unexpected keys: {len(unexpected)}')
+    else:
+        print('[热启动] 未指定 finetune 权重，从预训练权重开始训练')
+
     save_modules = training_args.save_modules
     print(f'save_modules: {save_modules}')
     save_modules = save_modules.split(',')
