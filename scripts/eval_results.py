@@ -4,17 +4,28 @@ import os
 
 import sys
 
-def eval_avqa(fp=None):
+def eval_avqa(fp=None, filter_json=None):
     if fp is None:
-        if len(sys.argv) > 1:
-            fp = sys.argv[1]
-        else:
-            # 默认指向刚才配置的消融实验结果路径（带 _no_audio 后缀）
-            fp = '/root/autodl-tmp/Crab/ckpt/inference_avqa_no_audio/infer_results.jsonl'
-            
+        import argparse
+        parser = argparse.ArgumentParser()
+        parser.add_argument('fp', nargs='?', default='/root/autodl-tmp/Crab/ckpt/inference_avqa/infer_results.jsonl')
+        parser.add_argument('--filter', type=str, default=None, help='Path to subset json (e.g. head_samples.json)')
+        args = parser.parse_args()
+        fp = args.fp
+        filter_json = args.filter
+
+    # 如果有过滤器，先读取允许的 qid 集合
+    allowed_qids = None
+    if filter_json and os.path.exists(filter_json):
+        print(f"Filtering by: {filter_json}")
+        with open(filter_json, 'r') as f:
+            subset_data = json.load(f)
+            allowed_qids = {str(s['question_id']) for s in subset_data}
+            print(f"Subset size: {len(allowed_qids)}")
+
     if not os.path.exists(fp):
         print(f"Error: {fp} not found.")
-        print("Usage: python scripts/eval_results.py [path_to_jsonl]")
+        print("Usage: python scripts/eval_results.py [path_to_jsonl] [--filter subset.json]")
         return
 
     correct = 0
@@ -29,6 +40,11 @@ def eval_avqa(fp=None):
             try:
                 item = json.loads(line)
             except:
+                continue
+            
+            # 过滤逻辑
+            qid = str(item.get('qid', ''))
+            if allowed_qids is not None and qid not in allowed_qids:
                 continue
                 
             predict_text = item.get('predict', '')
