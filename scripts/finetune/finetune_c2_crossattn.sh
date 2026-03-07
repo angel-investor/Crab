@@ -15,8 +15,8 @@ RANK=0
 llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
 
 # Training Arguments
-LOCAL_BATCH_SIZE=16       # A800 80GB，截止前只用了25GB，大幅增大 batch
-GRADIENT_ACCUMULATION_STEPS=2   # 有效 batch=16*2=32
+LOCAL_BATCH_SIZE=8        # 16 OOM，回退到 8
+GRADIENT_ACCUMULATION_STEPS=4   # 有效 batch=8*4=32
 GLOBAL_BATCH_SIZE=$((WORLD_SIZE * NPROC_PER_NODE * LOCAL_BATCH_SIZE * GRADIENT_ACCUMULATION_STEPS))
 
 # Log Arguments
@@ -100,7 +100,7 @@ python scripts/finetune/finetune_hyperlora.py \
     --warmup_ratio 0.05 \
     --lr_scheduler_type "cosine" \
     --logging_steps 10 \
-    --gradient_checkpointing False \
+    --gradient_checkpointing True \
     --half_precision_backend "auto" \
     --dataloader_num_workers 12 \
     --dataloader_pin_memory True \
