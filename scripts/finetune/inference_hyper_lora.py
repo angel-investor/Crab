@@ -1453,7 +1453,8 @@ def train(attn_implementation=None):
                                               query_generator_num_layers=model_args.query_generator_num_layers,
                                               dice_loss_weight=training_args.dice_loss_weight,
                                               bce_loss_weight=training_args.bce_loss_weight,
-                                              use_vqgan=False)
+                                              use_vqgan=False,
+                                              use_av_crossattn=model_args.use_av_crossattn)
 
     image_scale_nums = model_args.image_scale_nums
     token_nums_per_scale = model_args.token_nums_per_scale

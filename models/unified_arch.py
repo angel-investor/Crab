@@ -59,6 +59,7 @@ class UnifiedMetaModel:
         segment_branch = False,
         # vqgan
         use_vqgan = False,
+        use_av_crossattn = False,
     ):
 
         if visual_branch:
@@ -83,7 +84,7 @@ class UnifiedMetaModel:
         if audio_branch:
             self.audio_encoder =  AudioEncoder(ckpt_path=BEATs_ckpt_path)
             self.al_projector = ALProjector(bert_ckpt_path=bert_ckpt_path, hidden_size=768, d_model=d_model, depth=2, num_query_token=audio_query_token_nums,
-                                            num_hidden_layers=2)
+                                            num_hidden_layers=2, use_av_crossattn=use_av_crossattn)
             print('init audio_encoder, al_projector finished...')
 
 
@@ -150,12 +151,12 @@ class UnifiedMetaModel:
         return vit_feature_list, qformer_feature_list
 
 
-    def encode_audio(self,audio):
+    def encode_audio(self,audio, video_feature=None):
         audio_feature = self.audio_encoder(audio)  # fp32（BEATs weight_norm 不支持 bf16）
         # 在进入 al_projector（bf16）之前，将 fp32 特征转换为 al_projector 的 dtype
         proj_dtype = next(self.al_projector.parameters()).dtype
         audio_feature = audio_feature.to(proj_dtype)
-        audio_feature = self.al_projector(audio_feature)
+        audio_feature = self.al_projector(audio_feature, visual_feature=video_feature)
         return audio_feature
 
 
@@ -186,10 +187,10 @@ class UnifiedMetaForCausalLM(ABC):
     def get_model(self) -> UnifiedMetaModel:
         pass
 
-    def encode_audio(self,audio, batch_first=True):
+    def encode_audio(self,audio, video_feature=None, batch_first=True):
         if not batch_first:
             audio = audio.unsqueeze(0)
-        audio_feature = self.get_model().encode_audio(audio)
+        audio_feature = self.get_model().encode_audio(audio, video_feature=video_feature)
         if not batch_first:
             audio_feature = audio_feature.squeeze(0)
         return audio_feature
@@ -280,18 +281,20 @@ class UnifiedMetaForCausalLM(ABC):
             inputs_embeds_seg=[]
             labels_seg=[]
             pre_indice=0
+            current_video_feature = None # 缓存当前样本的视频特征，用于音频对齐
             for idx,indice in enumerate(X_token_indices):
                 inputs_embeds_seg.append(self.encode_ids(input_ids[pre_indice:indice]))
                 labels_seg.append(labels[pre_indice:indice])
                 
                 special_token = self.IDS_2_SPECIAL_TOKEN[input_ids[indice].item()]
                 if special_token == '<audio>':
-                    feature = self.encode_audio(batch_X_modals[i][special_token],batch_first=False)
+                    feature = self.encode_audio(batch_X_modals[i][special_token], video_feature=current_video_feature, batch_first=False)
                     inputs_embeds_seg.append(feature)
                     labels_seg.append(torch.full((feature.shape[0],),-100,dtype=torch.long,device=device))
                 elif special_token == '<video>':
                     vit_feature_list, qformer_feature_list = self.encode_video(batch_X_modals[i][special_token],batch_first=False)
                     feature = qformer_feature_list[-1] # last layer qformer feature
+                    current_video_feature = feature
                     inputs_embeds_seg.append(feature)  
                     labels_seg.append(torch.full((feature.shape[0],),-100,dtype=torch.long,device=device))
                     # if return_multi_scale_features and is_avs_task: # for ref-avs

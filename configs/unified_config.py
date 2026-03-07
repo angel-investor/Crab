@@ -20,6 +20,9 @@ class ModelArguments:
     BEATs_ckpt_path: str = field(default='')
     bert_ckpt_path: str = field(default='')
     audio_query_token_nums: int = field(default=32)
+    use_av_crossattn: bool = field(default=False, metadata={"help": "Enable explicit AV Cross-Attention in ALProjector."})
+    use_mccd: bool = field(default=False, metadata={"help": "Enable MCCD debiasing loss."})
+    mccd_lambda: float = field(default=0.1)
     ## seg module
     prompt_embed_dim: int = field(default=256)
     mask_decoder_transformer_depth: int = field(default=2)

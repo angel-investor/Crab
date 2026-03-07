@@ -190,6 +190,28 @@ class AudioEncoder(nn.Module):
         return audio_embeds
 
 
+
+class AVCrossAttentionFusion(nn.Module):
+    """
+    音频 Query 与视频特征做 Cross-Attention，
+    让音频表示感知视频时序结构（参考 Ola 的视频-音频桥梁思路）
+    """
+    def __init__(self, d_model=4096, nhead=8):
+        super().__init__()
+        self.cross_attn = nn.MultiheadAttention(d_model, nhead, batch_first=True)
+        self.norm = nn.LayerNorm(d_model)
+
+    def forward(self, audio_feat, video_feat):
+        # audio_feat: (B, L_a, D)  video_feat: (B, L_v, D)
+        # 将音频作为 Query，视频作为 Key/Value
+        fused, _ = self.cross_attn(
+            query=audio_feat,
+            key=video_feat,
+            value=video_feat
+        )
+        return self.norm(audio_feat + fused)  # 残差连接
+
+
 class ALProjector(nn.Module):
     def __init__(
         self,
@@ -198,12 +220,14 @@ class ALProjector(nn.Module):
         num_query_token = 32, 
         num_hidden_layers = 2, 
         d_model = 3584, 
-        depth = 2
+        depth = 2,
+        use_av_crossattn = False
     ) -> None:
         super().__init__()
 
         self.audio_ln = nn.LayerNorm(hidden_size)
         self.num_query_token = num_query_token
+        self.use_av_crossattn = use_av_crossattn
         # self.tokenizer = BertTokenizer.from_pretrained(bert_ckpt_path, local_files_only=True, truncation_side='right')
         # tokenizer.add_special_tokens({"bos_token": "[DEC]"})
     
@@ -220,8 +244,11 @@ class ALProjector(nn.Module):
 
         self.audio_proj = build_mlp(depth=depth,hidden_size=encoder_config.hidden_size,output_hidden_size=d_model)
 
+        if self.use_av_crossattn:
+            self.av_fusion = AVCrossAttentionFusion(d_model=d_model)
 
-    def forward(self,audio_feature):
+
+    def forward(self, audio_feature, visual_feature=None):
         '''
             audio_feature: b,n,d  / b, t, n, d
             text_ids: b,L
@@ -246,6 +273,10 @@ class ALProjector(nn.Module):
             audio_embeds = audio_embeds[:,:self.num_query_token]
             audio_embeds = audio_embeds.reshape(b, t * self.num_query_token, -1)
             audio_embeds = self.audio_proj(audio_embeds)
+            
+            if self.use_av_crossattn and visual_feature is not None:
+                # visual_feature 应该是 (b, t*32, d)
+                audio_embeds = self.av_fusion(audio_embeds, visual_feature)
 
         elif len(audio_feature.shape) == 3:
             b, n, d = audio_feature.shape
@@ -262,6 +293,9 @@ class ALProjector(nn.Module):
             )
             audio_embeds = query_output.last_hidden_state # b,L,d
             audio_embeds = self.audio_proj(audio_embeds[:,:self.num_query_token])
+
+            if self.use_av_crossattn and visual_feature is not None:
+                audio_embeds = self.av_fusion(audio_embeds, visual_feature)
 
         return audio_embeds
 
