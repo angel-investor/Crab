@@ -202,7 +202,12 @@ class AVCrossAttentionFusion(nn.Module):
         self.norm = nn.LayerNorm(d_model)
 
     def forward(self, audio_feat, video_feat):
-        # audio_feat: (B, L_a, D)  video_feat: (B, L_v, D)
+        # audio_feat: (B, L_a, D)  video_feat: (B, L_v, D) 或 (L_v, D)
+        # 在单样本循环中 video_feat 可能是 2D，统一补齐 batch 维
+        if video_feat.dim() == 2:
+            video_feat = video_feat.unsqueeze(0)
+        if audio_feat.dim() == 2:
+            audio_feat = audio_feat.unsqueeze(0)
         # 将音频作为 Query，视频作为 Key/Value
         fused, _ = self.cross_attn(
             query=audio_feat,
