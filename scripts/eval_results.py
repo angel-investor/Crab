@@ -3,7 +3,7 @@ import re
 import os
 
 def eval_avqa():
-    fp = 'results/inference_avqa/infer_results.jsonl'
+    fp = '/root/autodl-tmp/Crab/ckpt/inference_avqa/infer_results.jsonl'
     if not os.path.exists(fp):
         print(f"Error: {fp} not found.")
         return
