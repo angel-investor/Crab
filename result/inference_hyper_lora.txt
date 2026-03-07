@@ -1,7 +1,0 @@
-(crab39) root@autodl-container-x0h7zww1t5-9dd07626:~/autodl-tmp/Crab# python scripts/eval_results.py
-Reading results from /root/autodl-tmp/Crab/ckpt/inference_avqa/infer_results.jsonl...
-------------------------------
-Total Samples: 10321
-Correct:       6011
-Accuracy:      58.24%
-------------------------------
