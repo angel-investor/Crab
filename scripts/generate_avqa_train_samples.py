@@ -11,11 +11,20 @@ import os
 
 # ===== 路径配置 =====
 AVQA_ROOT = '/root/autodl-tmp/Crab/data/music-avqa'
-QA_TRAIN_JSON = os.path.join(AVQA_ROOT, 'avqa-train.json')  # MUSIC-AVQA 原始训练集标注
-VIDEO_DIR = os.path.join(AVQA_ROOT, 'avqa-videos/MUSIC-AVQA-videos-Real')
+QA_TRAIN_JSON = os.path.join(AVQA_ROOT, 'avqa-train.json')
+VIDEO_DIR_REAL = os.path.join(AVQA_ROOT, 'avqa-videos/MUSIC-AVQA-videos-Real')
+VIDEO_DIR_SYNTH = os.path.join(AVQA_ROOT, 'avqa-videos/MUCIS-AVQA-videos-Synthetic')  # 注意拼写 typo
 AUDIO_DIR = os.path.join(AVQA_ROOT, 'audio')
-CONVERTED_LABEL_DIR = os.path.join(AVQA_ROOT, 'converted_label')  # 训练 label txt 文件目录
+CONVERTED_LABEL_DIR = os.path.join(AVQA_ROOT, 'converted_label')
 OUTPUT_PATH = 'data/music_avqa_data/valid_train_samples.json'
+
+def get_video_path(video_id: str) -> str:
+    """根据 video_id 前缀自动判断是合成视频还是真实视频，返回正确路径。"""
+    # 合成视频：以字母前缀开头（esa, eva, evv, sa 等）
+    if video_id[:2].isalpha():
+        return os.path.join(VIDEO_DIR_SYNTH, f'{video_id}.mp4')
+    else:
+        return os.path.join(VIDEO_DIR_REAL, f'{video_id}.mp4')
 
 def make_label_text(answer: str) -> str:
     """生成训练目标文本，与推理输出格式匹配。"""
@@ -66,7 +75,7 @@ def main():
             skipped += 1
             continue
 
-        video_path = os.path.join(VIDEO_DIR, f'{video_id}.mp4')
+        video_path = get_video_path(str(video_id))
         audio_path = os.path.join(AUDIO_DIR, f'{video_id}.mp3')
 
         samples.append({
