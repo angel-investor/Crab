@@ -22,7 +22,7 @@ RUN_NAME=ms3-s4
 OUTP_DIR=results
 # export CUDA_VISIBLE_DEVICES='0'
 export TOKENIZERS_PARALLELISM='true'
-export ASCEND_LAUNCH_BLOCKING='1'
+# export ASCEND_LAUNCH_BLOCKING='1'  # 昇腾NPU专用，NVIDIA GPU 上会拖慢速度，禁用
 # export NCCL_P2P_DISABLE=NVL
 # export CUDA_DEVICE_ORDER="PCI_BUS_ID"
 
@@ -42,7 +42,7 @@ python scripts/finetune/inference_hyper_lora.py \
     --lora_r 8 \
     --lora_alpha 16 \
     --lora_dropout 0.05 \
-    --bf16 False \
+    --bf16 True \
     --tf32 False \
     --fp16 False \
     --ckpt_dir /root/autodl-tmp/Crab/ckpt \
