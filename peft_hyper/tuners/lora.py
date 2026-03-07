@@ -344,13 +344,15 @@ class Linear(nn.Linear, LoraLayer):
             result = F.linear(x, transpose(self.weight, self.fan_in_fan_out), bias=self.bias)
             
             if self.r > 0:
-                # 修复 bf16/fp16 混合精度下 lora_route 权重类型不匹配的问题
-                # lora_route 是 fp32 权重，输入 x 在 bf16 模式下是 bf16，需要转换类型
-                lora_route_dtype = self.lora_route.weight.dtype
-                route_weight = nn.functional.softmax(self.lora_route(x.to(lora_route_dtype)), dim=-1, dtype=torch.float32).to(result.dtype)
+                # 修复 bf16/fp16 混合精度下所有 LoRA 层（lora_route/lora_A/lora_B）类型不匹配的问题
+                # lora_route/lora_A/lora_B 权重均为 fp32，统一将 x 转换后再计算，结果转回 result.dtype（bf16）
+                lora_dtype = self.lora_route.weight.dtype
+                x_for_lora = x.to(lora_dtype)
+                route_weight = nn.functional.softmax(self.lora_route(x_for_lora), dim=-1, dtype=torch.float32).to(result.dtype)
                 
                 for i in range(self.lora_num):
-                    result = result + torch.unsqueeze(route_weight[:,:,i], -1) * getattr(self, f"lora_B{i}")(getattr(self, f"lora_A")(self.lora_dropout(x))) * self.scaling
+                    lora_out = getattr(self, f"lora_B{i}")(getattr(self, f"lora_A")(self.lora_dropout(x_for_lora)))
+                    result = result + torch.unsqueeze(route_weight[:,:,i], -1) * lora_out.to(result.dtype) * self.scaling
 
         # blcls = torch.zeros(1)[0].to(result)
         # if task_types != None:
