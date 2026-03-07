@@ -1,31 +1,0 @@
-==================================================
-   C2 实验：音视频显式对齐微调
-   GLOBAL_BATCH_SIZE = 32
-==================================================
-no npu!
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.12it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.75it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.62it/s]
-/root/miniconda3/envs/crab39/lib/python3.9/site-packages/torch/nn/utils/weight_norm.py:30: UserWarning: torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.
-  warnings.warn("torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.")
-ori_tokenizer_vocab_nums:  32001  MM_tokenizer_vocab_nums:  32018
-init visual_encoder, vl_projector finished...
-init audio_encoder, al_projector finished...
-pop embed weight, shape: torch.Size([32017, 4096]) load ckpt from path: /root/autodl-tmp/Crab/pretrain_ckpt
-pop embed weight, shape: torch.Size([32017, 4096])  load ckpt from path: /root/autodl-tmp/Crab/pretrain_ckpt
-[热启动] 从 finetune 权重加载: /root/autodl-tmp/Crab/ckpt/finetune_weights.bin
-[热启动] missing keys (新模块，正常): 946
-[热启动] unexpected keys: 0
-save_modules: vl_projector,al_projector,lora,av_fusion
-trainable_params: 258.617MB
-mask token:  <mask_0><mask_1><mask_2><mask_3><mask_4><mask_5>
-Traceback (most recent call last):
-  File "/root/autodl-tmp/Crab/scripts/finetune/finetune_hyperlora.py", line 265, in <module>
-    train()
-  File "/root/autodl-tmp/Crab/scripts/finetune/finetune_hyperlora.py", line 235, in train
-    dataset, collator = get_dataset_collator(data_args=data_args, tokenizer=tokenizer, 
-  File "/root/autodl-tmp/Crab/dataset/unified_dataset.py", line 2410, in get_dataset_collator
-    dataset = UnifiedDataset(
-  File "/root/autodl-tmp/Crab/dataset/unified_dataset.py", line 123, in __init__
-    self.add_avqa_task_samples()
-  File "/root/autodl-tmp/Crab/dataset/unified_dataset.py", line 160, in add_avqa_task_samples
-    with open(avqa_annotation_path,'r') as f:
-FileNotFoundError: [Errno 2] No such file or directory: 'data/music_avqa_data/valid_train_samples.json'
