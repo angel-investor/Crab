@@ -5,7 +5,7 @@
 ###########################################################
 
 llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
-ABLATION_CKPT_DIR=/root/autodl-tmp/Crab/results/finetune_c2_ablation/avqa_no_crossattn
+ABLATION_CKPT_DIR=/root/autodl-tmp/Crab/results/finetune_c2_ablation/avqa_no_crossattn/checkpoint-997
 
 echo "=================================================="
 echo "   消融实验推理（不带 CrossAttn）"
