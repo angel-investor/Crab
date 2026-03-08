@@ -8,7 +8,7 @@
 llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
 
 # C2 微调后的权重目录（与 finetune 脚本中 output_dir 对应）
-C2_CKPT_DIR=results/finetune_c2/avqa_c2_crossattn
+C2_CKPT_DIR=/root/autodl-tmp/Crab/results/finetune_c2/avqa_c2_crossattn/checkpoint-997
 
 echo "=================================================="
 echo "   C2 实验：音视频显式对齐推理评估"
