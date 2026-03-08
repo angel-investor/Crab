@@ -1,0 +1,94 @@
+#!/bin/bash
+
+###########################################################
+# 消融实验：不带 CrossAttn 的对照组（C2-ablation）
+# 与 finetune_c2_crossattn.sh 唯一区别：use_av_crossattn=False
+# 目的：证明 +17% 提升来自 CrossAttn 而非单纯 AVQA 任务专项微调
+###########################################################
+
+llama2_ckpt_path=/root/autodl-tmp/Crab/pretrain/llama2
+
+LOCAL_BATCH_SIZE=8
+GRADIENT_ACCUMULATION_STEPS=4
+
+export TRANSFORMERS_OFFLINE=1
+export WANDB_PROJECT=finetune_c2_ablation
+RUN_NAME=avqa_no_crossattn
+OUTP_DIR=/root/autodl-tmp/Crab/results
+
+export TOKENIZERS_PARALLELISM='true'
+
+echo "=================================================="
+echo "   消融实验：AVQA 专项微调（不带 CrossAttn）"
+echo "=================================================="
+
+python scripts/finetune/finetune_hyperlora.py \
+    --llm_name llama \
+    --model_name_or_path $llama2_ckpt_path \
+    --exp_desc "ablation_no_crossattn" \
+    --freeze_backbone True \
+    --lora_enable True \
+    --use_hyper_lora True \
+    --bits 32 \
+    --lora_r 8 \
+    --lora_alpha 16 \
+    --lora_dropout 0.05 \
+    --bf16 True \
+    --tf32 False \
+    --fp16 False \
+    --pretrain_ckpt_dir /root/autodl-tmp/Crab/pretrain_ckpt \
+    --unifed_finetune_ckpt_path /root/autodl-tmp/Crab/ckpt/finetune_weights.bin \
+    --avqa_task True \
+    --ave_task False \
+    --avvp_task False \
+    --arig_task False \
+    --avcap_task False \
+    --ms3_task False \
+    --s4_task False \
+    --avss_task False \
+    --ref_avs_task False \
+    --use_av_crossattn False \
+    --save_modules vl_projector,al_projector,lora \
+    --multi_frames False \
+    --visual_branch True \
+    --video_frame_nums 4 \
+    --vit_ckpt_path /root/autodl-tmp/Crab/pretrain/clip \
+    --select_feature patch \
+    --image_size 224 \
+    --patch_size 14 \
+    --visual_query_token_nums 32 \
+    --audio_branch True \
+    --BEATs_ckpt_path /root/autodl-tmp/Crab/pretrain/beats/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt \
+    --bert_ckpt_path /root/autodl-tmp/Crab/pretrain/bert \
+    --audio_query_token_nums 32 \
+    --seg_branch False \
+    --prompt_embed_dim 256 \
+    --mask_decoder_transformer_depth 2 \
+    --low_res_mask_size 112 \
+    --image_scale_nums 2 \
+    --token_nums_per_scale 3 \
+    --avs_query_num 300 \
+    --num_classes 1 \
+    --query_generator_num_layers 2 \
+    --ce_loss_weight 1.0 \
+    --dice_loss_weight 0.5 \
+    --bce_loss_weight 1.0 \
+    --output_dir $OUTP_DIR/$WANDB_PROJECT/$RUN_NAME \
+    --num_train_epochs 1 \
+    --per_device_train_batch_size $LOCAL_BATCH_SIZE \
+    --per_device_eval_batch_size $LOCAL_BATCH_SIZE \
+    --gradient_accumulation_steps $GRADIENT_ACCUMULATION_STEPS \
+    --ddp_find_unused_parameters False \
+    --evaluation_strategy "no" \
+    --save_strategy "epoch" \
+    --save_total_limit 1 \
+    --learning_rate 2e-5 \
+    --weight_decay 0. \
+    --warmup_ratio 0.05 \
+    --lr_scheduler_type "cosine" \
+    --logging_steps 10 \
+    --gradient_checkpointing True \
+    --half_precision_backend "auto" \
+    --dataloader_num_workers 12 \
+    --dataloader_pin_memory True \
+    --report_to tensorboard
