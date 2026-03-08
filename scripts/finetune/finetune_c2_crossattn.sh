@@ -23,7 +23,7 @@ GLOBAL_BATCH_SIZE=$((WORLD_SIZE * NPROC_PER_NODE * LOCAL_BATCH_SIZE * GRADIENT_A
 export TRANSFORMERS_OFFLINE=1
 export WANDB_PROJECT=finetune_c2
 RUN_NAME=avqa_c2_crossattn
-OUTP_DIR=/root/autodl-tmp/Crab/results   # 改到空间更大的目录
+OUTP_DIR=/root/autodl-tmp/Crab/results
 
 export TOKENIZERS_PARALLELISM='true'
 # export ASCEND_LAUNCH_BLOCKING='1'
@@ -92,8 +92,7 @@ python scripts/finetune/finetune_hyperlora.py \
     --gradient_accumulation_steps $GRADIENT_ACCUMULATION_STEPS \
     --ddp_find_unused_parameters False \
     --evaluation_strategy "no" \
-    --save_strategy "steps" \
-    --save_steps 1.0 \
+    --save_strategy "epoch" \
     --save_total_limit 1 \
     --learning_rate 2e-5 \
     --weight_decay 0. \
