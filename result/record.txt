@@ -82,4 +82,30 @@ C2 热启动支持已完成！ 现在可以直接在服务器运行了。
 多任务微调权重 (finetune_weights.bin) ← 覆盖投影器 + LoRA
     ↓  加载（strict=False）
 ✅ al_projector / vl_projector / lora  → 从成熟的微调状态继续训练
-✅ av_fusion                           → 随机初始化，等待 C2 学习
+
+
+✅ av_fusion                           → 随机初始化，等待 C2 学习C2 (av_crossattn, checkpoint-391): 74.65% (6815/9129)
+
+
+ C2 实验结果出炉！
+
+实验	样本数	准确率
+无音频（消融）	9129	53.46%
+基线（原版 Crab）	9129	57.59%
+C2（音视频显式对齐）	9129	74.65% ✨
+提升高达 +17.06%！ 这是一个非常强的论文结果。
+
+(crab39) root@autodl-container-x0h7zww1t5-9dd07626:~/autodl-tmp/Crab# python scripts/eval_results.py results/finetune_c2/avqa_c2_crossattn/inference_avqa/infer_results.jsonl
+Reading results from results/finetune_c2/avqa_c2_crossattn/inference_avqa/infer_results.jsonl...
+------------------------------
+Total Samples: 9129
+Correct:       6815
+Accuracy:      74.65%
+------------------------------
+(crab39) root@autodl-container-x0h7zww1t5-9dd07626:~/autodl-tmp/Crab# python scripts/eval_results.py /root/autodl-tmp/Crab/ckpt/inference_avqa/infer_results.jsonl.clean
+Reading results from /root/autodl-tmp/Crab/ckpt/inference_avqa/infer_results.jsonl.clean...
+------------------------------
+Total Samples: 9129
+Correct:       5257
+Accuracy:      57.59%
+------------------------------
