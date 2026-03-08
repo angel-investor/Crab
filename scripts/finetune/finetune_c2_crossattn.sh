@@ -49,7 +49,7 @@ python scripts/finetune/finetune_hyperlora.py \
     --tf32 False \
     --fp16 False \
     --pretrain_ckpt_dir /root/autodl-tmp/Crab/pretrain_ckpt \
-    --unifed_finetune_ckpt_path /root/autodl-tmp/Crab/ckpt/finetune_weights.bin \
+    --unifed_finetune_ckpt_path /root/autodl-tmp/Crab/results/finetune_c2/avqa_c2_crossattn/finetune_weights.bin \
     --avqa_task True \
     --ave_task False \
     --avvp_task False \

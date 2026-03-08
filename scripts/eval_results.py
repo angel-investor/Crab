@@ -64,10 +64,14 @@ def eval_avqa(fp=None, filter_json=None):
                 # 备选匹配：匹配 "the answer is XXX" 或 "answer: XXX"
                 alt_match = re.search(r'(?:the answer is|answer:)\s*(\S+)', predict_text, re.IGNORECASE)
                 if alt_match:
-                    pred_answer = alt_match.group(1).strip().lower().rstrip('.,;')
+                    pred_answer = alt_match.group(1).strip().lower()
                 else:
                     total += 1
                     continue
+            
+            # 清洗特殊 token 和标点（如 </s>、<pad>、. , ; 等）
+            pred_answer = re.sub(r'<[^>]+>', '', pred_answer)  # 去掉所有 <...> 标签
+            pred_answer = pred_answer.strip().rstrip('.,;:?!').strip()
             
             if pred_answer == gt_answer:
                 correct += 1
